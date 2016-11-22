@@ -5,12 +5,12 @@ const getImageData = (ctx, n) => {
 
     // sample color data from n random pixels
     for (let i = 0; i < n; i++) {
-      let x = Math.floor(Math.random() * 500);
-      let y = Math.floor(Math.random() * 500);
-      let pixelData = ctx.getImageData(x, y, 1, 1).data;
+      let x1 = Math.floor(Math.random() * 500);
+      let x2 = Math.floor(Math.random() * 500);
+      let pixelData = ctx.getImageData(x1, x2, 1, 1).data;
       let color = pixelData[0] + pixelData[1] + pixelData[2];
       let group = color == zeroColor ? 0 : 1;
-      dataset.push([x, y, group]);
+      dataset.push([group, x1, x2]);
     }
     return dataset;
 };
