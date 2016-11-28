@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mvelk/ml_playground/issues"
   },
-  "homepage": "https://github.com/mvelk/ml_playground#readme"
+  "homepage": "https://github.com/mvelk/ml_playground#readme",
+  "dependencies": {
+    "d3": "^4.4.0"
+  }
 }
