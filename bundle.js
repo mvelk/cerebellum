@@ -332,7 +332,8 @@
 	          links.push({
 	            "source": `${k+1}:${j}`,
 	            "target": `${k+2}:${i+1}`,
-	            "value": Math.abs(currentMatrix.array[i][j])
+	            "value": Math.abs(currentMatrix.array[i][j]),
+	            "color": "red"
 	          })
 	        }
 	      }
