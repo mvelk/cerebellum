@@ -62,7 +62,7 @@
 	  image.style.height = "auto";
 	
 	  // set img source
-	  let imgSrc = "../images/sample_data2.jpg";
+	  let imgSrc = "../images/sample_data1.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
@@ -76,12 +76,12 @@
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
 	    let dataset = getImageData(ctx, 500);
 	    let model = new Model([2,4,2,1], dataset, dataset, "sigmoid", 0.3);
-	    console.log(model.weightMatrices);
+	    console.log(model.calculateLoss("training"));
 	    for (var i = 0; i < 1000; i++) {
 	      model.iterate();
 	    }
+	    console.log(model.calculateLoss("training"));
 	    window.model = model;
-	    console.log(model.weightMatrices);
 	
 	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
 	    // heatMap.generate();
@@ -98,16 +98,6 @@
 	    d3.select('#sankey')
 	    .datum(data)
 	    .call(diagram);
-	
-	    // for (var i = 0; i < 400; i++) {
-	    //   model.iterate();
-	    // }
-	    //
-	    // data = model.getSankeyData();
-	    // d3.select('#sankey')
-	    // .datum(data)
-	    // .call(diagram);
-	    // console.log(model.weightMatrices);
 	
 	    let heatMap = new HeatMap(model, 250, 250, [0, 250], d3.select("#heatmap"));
 	    heatMap.generate();
@@ -154,8 +144,10 @@
 	  constructor(model,data,testData,activationF,learningRate) {
 	    this.model = model; // the number of neurons in each layer, counting input and output layers
 	    this.length = model.length;
-	    this.activationF = Activation[activationF];
-	    this.lossF = Activation[activationF+" loss"];
+	    this.functions = Activation[activationF];
+	    this.activationF = this.functions["activation"];
+	    this.derivativeF = this.functions["derivative"];
+	    this.lossF = Activation["loss"];
 	    this.learningRate = learningRate;
 	
 	    // training data
@@ -164,8 +156,6 @@
 	    this.x = this.data.getCols(1,this.data.m);
 	    this.x = this.x.transpose(); // 1 observation per column
 	    this.N = this.data.n; // number of observations
-	console.log(this.data);
-	console.log(this.y);
 	    // test data
 	    this.testData = new Matrix(testData);
 	    this.testY = this.testData.getCols(0,1);
@@ -245,6 +235,7 @@
 	    for (var i = this.length-2; i > 0; i--) {
 	      weightMatrix = this.weightMatrices[i]; // A^n
 	      layer = layerValues[i]; // a^n
+	      layer = layer.addBias();
 	      d = this.backLayer(weightMatrix,d,layer); // d^n = backLayer(A^n,d^n+1,a^n)
 	      d = d.getRows(1,d.n); // removing the first entry, corresponding to bias of current layer
 	      daT = d.multiply(layerValues[i-1].addBias().transpose()); // D_ij = D_ij + a_j * d_i
@@ -253,11 +244,13 @@
 	    return accumulator;
 	  }
 	
-	  // other layers: d^n = (A^n)T * d^n+1 * (a^n . (1 - a^n))
+	  // other layers: d^n = (A^n)T * d^n+1 .* g'(a^n),
+	  // where .* is a row wise multiplication, and g'(a^n) = (a^n .* (1 - a^n)) for sigmoid
 	  backLayer(weightMatrix,d,layer) {
-	    let dG = layer.dotProduct(Matrix.vector(layer.n,1).subtract(layer)); // (a^n . (1 - a^n))
+	    let dG = layer.elementWiseFunction(this.derivativeF); // g'(a^n)
 	    let ATd = weightMatrix.transpose().multiply(d); // (A^n)T * d^n+1
-	    return ATd.multiply(dG); // (A^n)T * d^n+1 * (a^n . (1 - a^n))
+	    let newD = ATd.rowWiseMultiply(dG); // (A^n)T * d^n+1 .* g'(a^n)
+	    return newD;
 	  }
 	
 	  // increments weights according to accumulator
@@ -348,12 +341,6 @@
 	    return {"nodes":nodes, "links":links}
 	  }
 	}
-	
-	// let m = new Model([2,4,2,1],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],"sigmoid",0.3)
-	// // let m = new Model([2,3,1],[[1,4,4],[0,0,0]],[[1,3,3],[0,1,1]],"sigmoid",0.3)
-	// console.log(m.weightMatrices[0]);
-	// m.iterate();
-	// console.log(m.weightMatrices[0]);
 	
 	
 	module.exports = Model;
@@ -487,6 +474,17 @@
 	    return new Matrix([[sum]]);
 	  }
 	
+	  rowWiseMultiply(matrix) {
+	    if (!this.canDot(matrix)){
+	      throw "Can't find row multiply, incorrect dimensions";
+	    }
+	    let product = [];
+	    for (var i = 0; i < this.n; i++) {
+	      product.push([this.array[i][0]*matrix.array[i][0]]);
+	    }
+	    return new Matrix(product);
+	  }
+	
 	  // appends a row of 1s to the top of a matrix
 	  addBias() {
 	    let array = this.array.slice();
@@ -542,10 +540,26 @@
 /***/ function(module, exports) {
 
 	const Activation = {
-	  "sigmoid" : (n) => {
-	    return 1/(1+Math.exp(-n));
+	  "sigmoid" : {
+	    "activation" : (n) => {
+	      return 1/(1+Math.exp(-n));
+	    },
+	    "derivative" : (n) => {
+	      return n*(1-n);
+	    }
 	  },
-	  "sigmoid loss" : (y,yHat) => {
+	  "tanh" : {
+	    "activation" : (n) => {
+	      let e2 = Math.exp(2*n)
+	      return (e2-1)/(e2+1);
+	    },
+	    "derivative" : (n) => {
+	      let e2 = Math.exp(2*n)
+	      let tanh = (e2-1)/(e2+1);
+	      return 1-tanh*tanh;
+	    }
+	  },
+	  "loss" : (y,yHat) => {
 	    return -(y*Math.log(yHat) + (1-y)*Math.log(1-yHat));
 	  }
 	};
