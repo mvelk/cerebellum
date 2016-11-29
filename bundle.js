@@ -62,7 +62,7 @@
 	  image.style.height = "auto";
 	
 	  // set img source
-	  let imgSrc = "../images/sample_data1.jpg";
+	  let imgSrc = "../images/sample_data2.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
@@ -74,11 +74,14 @@
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-	    let dataset = getImageData(ctx, 100);
-	    console.log(dataset);
-	    let model = new Model([2,3,1], dataset, dataset, "sigmoid", 0.3);
-	    model.iterate();
+	    let dataset = getImageData(ctx, 500);
+	    let model = new Model([2,4,2,1], dataset, dataset, "sigmoid", 0.3);
+	    console.log(model.weightMatrices);
+	    for (var i = 0; i < 1000; i++) {
+	      model.iterate();
+	    }
 	    window.model = model;
+	    console.log(model.weightMatrices);
 	
 	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
 	    // heatMap.generate();
@@ -95,7 +98,6 @@
 	    d3.select('#sankey')
 	    .datum(data)
 	    .call(diagram);
-	    console.log(model.weightMatrices);
 	
 	    // for (var i = 0; i < 400; i++) {
 	    //   model.iterate();
@@ -132,7 +134,7 @@
 	      let pixelData = ctx.getImageData(x, y, 1, 1).data;
 	      let color = pixelData[0] + pixelData[1] + pixelData[2];
 	      let group = color == zeroColor ? 0 : 1;
-	      dataset.push([x/250, y/250, group]);
+	      dataset.push([group, (x-125)/125, (y-125)/125]);
 	    }
 	    return dataset;
 	};
@@ -162,7 +164,8 @@
 	    this.x = this.data.getCols(1,this.data.m);
 	    this.x = this.x.transpose(); // 1 observation per column
 	    this.N = this.data.n; // number of observations
-	
+	console.log(this.data);
+	console.log(this.y);
 	    // test data
 	    this.testData = new Matrix(testData);
 	    this.testY = this.testData.getCols(0,1);
@@ -232,7 +235,6 @@
 	
 	  backProp(accumulator,layerValues,n) {
 	    let currentY = this.y.getRows(n,n+1);
-	    // final layer: d^n = a^n - y
 	    let d = layerValues[this.length-1].subtract(currentY); // d^i+1
 	    let daT = d.multiply(layerValues[this.length-2].addBias().transpose()); // d^i+1 * (a^i)T
 	    accumulator[this.length-2] = accumulator[this.length-2].add(daT); // D_ij = D_ij + a_j * d_i
@@ -262,7 +264,7 @@
 	  incrementWeights(accumulator,layerValues) {
 	    let increment;
 	    for (var i = 0; i < this.length-1; i++) {
-	      increment = accumulator[i].elementWiseFunction(n => this.learningRate*n/this.N);
+	      increment = accumulator[i].elementWiseFunction(x => this.learningRate*x/this.N);
 	      this.weightMatrices[i] = this.weightMatrices[i].subtract(increment);
 	    }
 	  }
@@ -309,7 +311,7 @@
 	    for (var i = 0; i < N; i++) {
 	      yVal = y.getRows(i,i+1).array[0][0];
 	      xVal = x.getCols(i,i+1).transpose().array[0];
-	      yHat = this.modelFunction(xVal).array[0][0];
+	      yHat = this.modelFunction(xVal)
 	      sumLoss += this.lossF(yVal, yHat);
 	    }
 	    sumLoss /= N;
@@ -346,6 +348,12 @@
 	    return {"nodes":nodes, "links":links}
 	  }
 	}
+	
+	// let m = new Model([2,4,2,1],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],"sigmoid",0.3)
+	// // let m = new Model([2,3,1],[[1,4,4],[0,0,0]],[[1,3,3],[0,1,1]],"sigmoid",0.3)
+	// console.log(m.weightMatrices[0]);
+	// m.iterate();
+	// console.log(m.weightMatrices[0]);
 	
 	
 	module.exports = Model;
@@ -518,7 +526,7 @@
 	    for (var i = 0; i < n; i++) {
 	      row = [];
 	      for (var j = 0; j < m; j++) {
-	        row.push(Math.random());
+	        row.push(Math.random()*10-5);
 	      }
 	      array[i] = row;
 	    }
@@ -16953,7 +16961,6 @@
 	
 	class HeatMap {
 	  constructor(model, width, sampleSize, domain, container) {
-	  console.log(container);
 	  this.model = model;
 	  this.width = [0, width];
 	  this.height = [0, width];
@@ -16962,11 +16969,10 @@
 	  this.container = container;
 	  this.xScale = d3.scaleLinear().domain(this.domain).range(this.width);
 	  this.yScale = d3.scaleLinear().domain(this.domain).range(this.height);
-	  this.colorScale = d3.scaleLinear().domain([0, 0.5, 1]).range(['palegreen', 'lavendar', 'salmon']).clamp(true);
+	  this.colorScale = d3.scaleLinear().domain([0, 1]).range(['palegreen', 'salmon']).clamp(true);
 	  }
 	
 	  generate() {
-	    console.log(this.container);
 	    window.container = this.container;
 	    this.container.append("div").style(
 	      {
@@ -16987,11 +16993,8 @@
 	    let p = 0;
 	    for (let x1 = 0; x1 < this.domain[1]; x1++) {
 	      for (let x2 = 0; x2 < this.domain[1]; x2++) {
-	        let value = this.model.modelFunction([x1/250, x2/250]);
+	        let value = this.model.modelFunction([(x2-125)/125, (x1-125)/125]);
 	        let color = d3.rgb(this.colorScale(value));
-	        console.log(x1);
-	        console.log(x2);
-	        console.log(this.domain[1]);
 	        image.data[p++] = color.r;
 	        image.data[p++] = color.g;
 	        image.data[p++] = color.b;
