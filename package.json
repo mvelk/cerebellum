@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/mvelk/ml_playground#readme",
   "dependencies": {
-    "d3": "^4.4.0"
+    "d3": "^4.4.0",
+    "d3-sankey": "^0.4.1"
   }
 }
