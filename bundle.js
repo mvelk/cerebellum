@@ -58,14 +58,16 @@
 	  let canvas = document.getElementById("myCanvas");
 	  let ctx = canvas.getContext("2d");
 	  let image = document.createElement("img");
+	  image.style.width = "250px";
+	  image.style.height = "auto";
 	
 	  // set img source
 	  let imgSrc = "../images/sample_data1.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
-	  let canvasWidth = 500;
-	  let canvasHeight = 500;
+	  let canvasWidth = 250;
+	  let canvasHeight = 250;
 	  canvas.width = canvasWidth;
 	  canvas.height = canvasHeight;
 	
@@ -77,12 +79,9 @@
 	    model.iterate();
 	    window.model = model;
 	
-	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
-	    // heatMap.generate();
-	    // heatMap.paintGradient();
-	    // console.log(heatMap);
-	    var chart = d3.select("#flow").append("svg").chart("Sankey");
-	    chart.draw({nodes: [{id:"a"},{id:"b"}], links: [{source:"a", target:"b"}]});
+	    let heatMap = new HeatMap(model, 250, 250, [0, 250], d3.select("#heatmap"));
+	    heatMap.generate();
+	    heatMap.paintGradient();
 	  });
 	
 	
@@ -100,12 +99,12 @@
 	
 	    // sample color data from n random pixels
 	    for (let i = 0; i < n; i++) {
-	      let x = Math.floor(Math.random() * 500);
-	      let y = Math.floor(Math.random() * 500);
+	      let x = Math.floor(Math.random() * 250);
+	      let y = Math.floor(Math.random() * 250);
 	      let pixelData = ctx.getImageData(x, y, 1, 1).data;
 	      let color = pixelData[0] + pixelData[1] + pixelData[2];
 	      let group = color == zeroColor ? 0 : 1;
-	      dataset.push([x, y, group]);
+	      dataset.push([x/250, y/250, group]);
 	    }
 	    return dataset;
 	};
@@ -16897,6 +16896,7 @@
 	
 	class HeatMap {
 	  constructor(model, width, sampleSize, domain, container) {
+	  console.log(container);
 	  this.model = model;
 	  this.width = [0, width];
 	  this.height = [0, width];
@@ -16909,12 +16909,15 @@
 	  }
 	
 	  generate() {
-	    this.heatMapContainer = this.container.append("div")
-	      .style({
+	    console.log(this.container);
+	    window.container = this.container;
+	    this.container.append("div").style(
+	      {
 	        width: `${this.width}px`,
-	        height: `${this.height}px`,
-	        });
-	    this.canvas = this.heatMapContainer.append("canvas")
+	        height: `${this.height}px`
+	      }
+	    );
+	    this.canvas = d3.select("#heatmap").selectAll("div").append("canvas")
 	      .attr("width", this.domain[1])
 	      .attr("height", this.domain[1])
 	      .style("width", this.width)
@@ -16922,13 +16925,16 @@
 	  }
 	
 	  paintGradient() {
-	    let context = this.canvas.getContext("2d");
+	    let context = this.canvas.node().getContext("2d");
 	    let image = context.createImageData(this.domain[1], this.domain[1]);
 	    let p = 0;
 	    for (let x1 = 0; x1 < this.domain[1]; x1++) {
 	      for (let x2 = 0; x2 < this.domain[1]; x2++) {
-	        let value = this.model.modelFunction([x1, x2]);
-	        let color = d3.rgb(this.colorScale);
+	        let value = this.model.modelFunction([x1/250, x2/250]);
+	        let color = d3.rgb(this.colorScale(value));
+	        console.log(x1);
+	        console.log(x2);
+	        console.log(this.domain[1]);
 	        image.data[p++] = color.r;
 	        image.data[p++] = color.g;
 	        image.data[p++] = color.b;
