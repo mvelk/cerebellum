@@ -63,14 +63,16 @@
 	  let sampleSize = 250;
 	
 	  // set img source
-	  let imgSrc = "../images/sample_data1.jpg";
+	  let imgSrc = "../images/sample_data2.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
-	  let canvasWidth = 100;
-	  let canvasHeight = 100;
-	  canvas.width = canvasWidth;
-	  canvas.height = canvasHeight;
+	  let canvasDim = 200;
+	  canvas.width = canvasDim;
+	  canvas.height = canvasDim;
+	
+	  // define domain size
+	  let domainDim = 100;
 	
 	  // set play variables
 	  let interval = undefined;
@@ -78,8 +80,8 @@
 	
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
-	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-	    let dataset = getImageData(ctx, sampleSize, canvasWidth, canvasHeight);
+	    ctx.drawImage(image, 0, 0, canvasDim, canvasDim);
+	    let dataset = getImageData(ctx, sampleSize, canvasDim, canvasDim);
 	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.1);
 	    window.model = model;
 	    console.log(dataset);
@@ -97,7 +99,7 @@
 	      .datum(data)
 	      .call(diagram);
 	
-	    let heatMap = new HeatMap(canvasWidth, sampleSize, [0, canvasWidth], d3.select("#heatmap"));
+	    let heatMap = new HeatMap(canvasDim, sampleSize, domainDim, d3.select("#heatmap"));
 	    heatMap.generate();
 	    heatMap.paintGradient(model);
 	
@@ -136,19 +138,19 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	const getImageData = (ctx, n, xdim, ydim) => {
+	const getImageData = (ctx, n, dim) => {
 	    let dataset = [];
 	    let topLeftPixel = ctx.getImageData(0, 0, 1, 1).data;
 	    let zeroColor = topLeftPixel[0] + topLeftPixel[1] + topLeftPixel[2];
 	
 	    // sample color data from n random pixels
 	    for (let i = 0; i < n; i++) {
-	      let x = Math.floor(Math.random() * xdim);
-	      let y = Math.floor(Math.random() * ydim);
+	      let x = Math.floor(Math.random() * dim);
+	      let y = Math.floor(Math.random() * dim);
 	      let pixelData = ctx.getImageData(x, y, 1, 1).data;
 	      let color = pixelData[0] + pixelData[1] + pixelData[2];
 	      let group = color == zeroColor ? 0 : 1;
-	      dataset.push([group, (x-(xdim/2))/(xdim/2), (y-(ydim/2))/(ydim/2)]);
+	      dataset.push([group, (x-(dim/2))/(dim/2), (y-(dim/2))/(dim/2)]);
 	    }
 	    return dataset;
 	};
@@ -17015,10 +17017,10 @@
 	const Model = __webpack_require__(2);
 	
 	class HeatMap {
-	  constructor(width, sampleSize, domain, container) {
-	  this.width = [0, width];
-	  this.height = [0, width];
-	  this.domain = domain;
+	  constructor(canvasDim, sampleSize, domainDim, container) {
+	  this.width = [0, canvasDim];
+	  this.height = [0, canvasDim];
+	  this.domain = [0, domainDim];
 	  this.sampleSize = sampleSize;
 	  this.container = container;
 	  this.xScale = d3.scaleLinear().domain(this.domain).range(this.width);
