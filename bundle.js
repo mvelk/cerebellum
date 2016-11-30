@@ -62,7 +62,7 @@
 	  image.style.height = "auto";
 	
 	  // set img source
-	  let imgSrc = "../images/sample_data2.jpg";
+	  let imgSrc = "../images/sample_data1.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
@@ -75,39 +75,27 @@
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
 	    let dataset = getImageData(ctx, 500);
-	    let model = new Model([2,4,2,1], dataset, dataset, "sigmoid", 0.3);
-	    console.log(model.weightMatrices);
+	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.3);
 	    for (var i = 0; i < 1000; i++) {
 	      model.iterate();
 	    }
 	    window.model = model;
-	    console.log(model.weightMatrices);
 	
 	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
 	    // heatMap.generate();
 	    // heatMap.paintGradient();
 	    // console.log(heatMap);
 	    let diagram = sankeyDiagram()
-	    .width(1000)
-	    .height(600)
-	    .margins({ left: 100, right: 160, top: 10, bottom: 10 })
-	    .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
-	    .linkTypeTitle(function(d) { return d.data.title; })
-	    .linkColor(function(d) { return d.data.color; });
+	      .width(1000)
+	      .height(600)
+	      .margins({ left: 100, right: 160, top: 10, bottom: 10 })
+	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
+	      .linkTypeTitle(function(d) { return d.data.title; })
+	      .linkColor(function(d) { return d.data.color; });
 	    let data = model.getSankeyData();
 	    d3.select('#sankey')
-	    .datum(data)
-	    .call(diagram);
-	
-	    // for (var i = 0; i < 400; i++) {
-	    //   model.iterate();
-	    // }
-	    //
-	    // data = model.getSankeyData();
-	    // d3.select('#sankey')
-	    // .datum(data)
-	    // .call(diagram);
-	    // console.log(model.weightMatrices);
+	      .datum(data)
+	      .call(diagram);
 	
 	    let heatMap = new HeatMap(model, 250, 250, [0, 250], d3.select("#heatmap"));
 	    heatMap.generate();
@@ -154,21 +142,27 @@
 	  constructor(model,data,testData,activationF,learningRate) {
 	    this.model = model; // the number of neurons in each layer, counting input and output layers
 	    this.length = model.length;
-	    this.activationF = Activation[activationF];
-	    this.lossF = Activation[activationF+" loss"];
+	
+	    // functions contingent on activation function
+	    this.functions = Activation[activationF];
+	    this.activationF = this.functions["activation"];
+	    this.derivativeF = this.functions["derivative"];
+	    this.inputF = this.functions["input"]; // some activation functions require morphing of data
+	    this.outputF = this.functions["output"];
+	    this.lossF = Activation["loss"];
 	    this.learningRate = learningRate;
 	
 	    // training data
 	    this.data = new Matrix(data);
 	    this.y = this.data.getCols(0,1);
+	    this.y = this.y.elementWiseFunction(this.inputF);
 	    this.x = this.data.getCols(1,this.data.m);
 	    this.x = this.x.transpose(); // 1 observation per column
 	    this.N = this.data.n; // number of observations
-	console.log(this.data);
-	console.log(this.y);
 	    // test data
 	    this.testData = new Matrix(testData);
 	    this.testY = this.testData.getCols(0,1);
+	    this.testY = this.testY.elementWiseFunction(this.inputF);
 	    this.testX = this.testData.getCols(1,this.testData.m);
 	    this.testX = this.testX.transpose();
 	    this.testN = this.testData.n;
@@ -176,6 +170,7 @@
 	    this.weightMatrices = this.createWeightMatrices();
 	  }
 	
+	  // Creates weight matrices according to each neuron layer
 	  createWeightMatrices() {
 	    let weightMatrices = [];
 	    // for each later, we need to map a_n (i elements) to a_n+1 (j elements)
@@ -187,6 +182,7 @@
 	    return weightMatrices;
 	  }
 	
+	  // runs forward, back propagation, and increments weights matrices
 	  iterate() {
 	    // accumulator for deltas of each layer
 	    let accumulator = this.getAccum();
@@ -200,7 +196,7 @@
 	    this.incrementWeights(accumulator);
 	  }
 	
-	  // creates array of vectors of 0s matching model's dimensions with bias
+	  // creates matrices of 0s matching dimensions of weight matrices
 	  getAccum() {
 	    let accum = [];
 	    let weightMatrix;
@@ -211,7 +207,7 @@
 	    return accum;
 	  }
 	
-	  // conducts forward prop for observation n, returns all neuron layers as 2D array
+	  // conducts forward prop for observation n, returns all neuron layers as an array containing column matrices
 	  forwardProp(n) {
 	    let layer = this.x.getCols(n,n+1);
 	    let layerValues = [layer]; // inputs are the first neuron layer
@@ -245,6 +241,7 @@
 	    for (var i = this.length-2; i > 0; i--) {
 	      weightMatrix = this.weightMatrices[i]; // A^n
 	      layer = layerValues[i]; // a^n
+	      layer = layer.addBias();
 	      d = this.backLayer(weightMatrix,d,layer); // d^n = backLayer(A^n,d^n+1,a^n)
 	      d = d.getRows(1,d.n); // removing the first entry, corresponding to bias of current layer
 	      daT = d.multiply(layerValues[i-1].addBias().transpose()); // D_ij = D_ij + a_j * d_i
@@ -253,11 +250,13 @@
 	    return accumulator;
 	  }
 	
-	  // other layers: d^n = (A^n)T * d^n+1 * (a^n . (1 - a^n))
+	  // other layers: d^n = (A^n)T * d^n+1 .* g'(a^n),
+	  // where .* is a row wise multiplication, and g'(a^n) = (a^n .* (1 - a^n)) for sigmoid
 	  backLayer(weightMatrix,d,layer) {
-	    let dG = layer.dotProduct(Matrix.vector(layer.n,1).subtract(layer)); // (a^n . (1 - a^n))
+	    let dG = layer.elementWiseFunction(this.derivativeF); // g'(a^n)
 	    let ATd = weightMatrix.transpose().multiply(d); // (A^n)T * d^n+1
-	    return ATd.multiply(dG); // (A^n)T * d^n+1 * (a^n . (1 - a^n))
+	    let newD = ATd.rowWiseMultiply(dG); // (A^n)T * d^n+1 .* g'(a^n)
+	    return newD;
 	  }
 	
 	  // increments weights according to accumulator
@@ -287,13 +286,11 @@
 	    }
 	
 	    // returns fitted y estimate
-	    return layerValues[this.length-1].array[0][0];
+	    return this.outputF(layerValues[this.length-1].array[0][0]);
 	  }
 	
 	  calculateLoss(type){
-	    let x;
-	    let y;
-	    let N;
+	    let x, y, N, yVal, xVal, yHat;
 	    if (type === "training"){
 	      x = this.x;
 	      y = this.y;
@@ -305,9 +302,6 @@
 	    }
 	
 	    let sumLoss = 0;
-	    let yVal;
-	    let xVal;
-	    let yHat;
 	    for (var i = 0; i < N; i++) {
 	      yVal = y.getRows(i,i+1).array[0][0];
 	      xVal = x.getCols(i,i+1).transpose().array[0];
@@ -330,17 +324,18 @@
 	        nodes.push({"id":`${i+1}:${j+1}`})
 	      }
 	    }
-	    let currentMatrix;
+	    let currentMatrix, color;
 	    let links = [];
 	    for (var k = 0; k < this.weightMatrices.length; k++) {
 	      currentMatrix = this.weightMatrices[k]
 	      for (var i = 0; i < currentMatrix.n; i++) {
 	        for (var j = 0; j < currentMatrix.m; j++) {
+	          color = currentMatrix.array[i][j] < 0 ? "salmon" : "palegreen"
 	          links.push({
 	            "source": `${k+1}:${j}`,
 	            "target": `${k+2}:${i+1}`,
 	            "value": Math.abs(currentMatrix.array[i][j]),
-	            "color": "red"
+	            "color": color
 	          })
 	        }
 	      }
@@ -348,12 +343,6 @@
 	    return {"nodes":nodes, "links":links}
 	  }
 	}
-	
-	// let m = new Model([2,4,2,1],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],[[1,-1,-1],[1,1,1],[0,-1,1],[0,1,-1]],"sigmoid",0.3)
-	// // let m = new Model([2,3,1],[[1,4,4],[0,0,0]],[[1,3,3],[0,1,1]],"sigmoid",0.3)
-	// console.log(m.weightMatrices[0]);
-	// m.iterate();
-	// console.log(m.weightMatrices[0]);
 	
 	
 	module.exports = Model;
@@ -487,6 +476,17 @@
 	    return new Matrix([[sum]]);
 	  }
 	
+	  rowWiseMultiply(matrix) {
+	    if (!this.canDot(matrix)){
+	      throw "Can't find row multiply, incorrect dimensions";
+	    }
+	    let product = [];
+	    for (var i = 0; i < this.n; i++) {
+	      product.push([this.array[i][0]*matrix.array[i][0]]);
+	    }
+	    return new Matrix(product);
+	  }
+	
 	  // appends a row of 1s to the top of a matrix
 	  addBias() {
 	    let array = this.array.slice();
@@ -542,10 +542,38 @@
 /***/ function(module, exports) {
 
 	const Activation = {
-	  "sigmoid" : (n) => {
-	    return 1/(1+Math.exp(-n));
+	  "sigmoid" : {
+	    "activation" : (n) => {
+	      return 1/(1+Math.exp(-n));
+	    },
+	    "derivative" : (n) => {
+	      return n*(1-n);
+	    },
+	    "input" : (n) => {
+	      return n
+	    },
+	    "output" : (n) => {
+	      return n
+	    }
 	  },
-	  "sigmoid loss" : (y,yHat) => {
+	  "tanh" : {
+	    "activation" : (n) => {
+	      let e2 = Math.exp(2*n)
+	      return (e2-1)/(e2+1);
+	    },
+	    "derivative" : (n) => {
+	      let e2 = Math.exp(2*n)
+	      let tanh = (e2-1)/(e2+1);
+	      return 1-tanh*tanh;
+	    },
+	    "input" : (n) => {
+	      return 2*n-1
+	    },
+	    "output" : (n) => {
+	      return (n+1)/2
+	    }
+	  },
+	  "loss" : (y,yHat) => {
 	    return -(y*Math.log(yHat) + (1-y)*Math.log(1-yHat));
 	  }
 	};
