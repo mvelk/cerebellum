@@ -60,47 +60,73 @@
 	  let image = document.createElement("img");
 	  image.style.width = "250px";
 	  image.style.height = "auto";
+	  let sampleSize = 250;
 	
 	  // set img source
 	  let imgSrc = "../images/sample_data1.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
-	  let canvasWidth = 250;
-	  let canvasHeight = 250;
+	  let canvasWidth = 100;
+	  let canvasHeight = 100;
 	  canvas.width = canvasWidth;
 	  canvas.height = canvasHeight;
+	
+	  // set play variables
+	  let interval = undefined;
+	  let iterations = 0;
 	
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-	    let dataset = getImageData(ctx, 500);
-	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.3);
-	    for (var i = 0; i < 1000; i++) {
-	      model.iterate();
-	    }
+	    let dataset = getImageData(ctx, sampleSize, canvasWidth, canvasHeight);
+	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.1);
 	    window.model = model;
+	    console.log(dataset);
 	
-	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
-	    // heatMap.generate();
-	    // heatMap.paintGradient();
-	    // console.log(heatMap);
 	    let diagram = sankeyDiagram()
-	      .width(1000)
+	      .width(1400)
 	      .height(600)
-	      .margins({ left: 100, right: 160, top: 10, bottom: 10 })
+	      .margins({ left: 40, right: 60, top: 10, bottom: 10 })
 	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	      .linkTypeTitle(function(d) { return d.data.title; })
 	      .linkColor(function(d) { return d.data.color; });
+	
 	    let data = model.getSankeyData();
 	    d3.select('#sankey')
 	      .datum(data)
 	      .call(diagram);
 	
-	    let heatMap = new HeatMap(model, 250, 250, [0, 250], d3.select("#heatmap"));
+	    let heatMap = new HeatMap(canvasWidth, sampleSize, [0, canvasWidth], d3.select("#heatmap"));
 	    heatMap.generate();
-	    heatMap.paintGradient();
+	    heatMap.paintGradient(model);
+	
+	    const play = () => {
+	      interval = window.setInterval(increment, 1)
+	    }
+	
+	    const increment = () => {
+	      model.iterate();
+	      iterations ++;
+	      if (iterations % 10 === 0){
+	        data = model.getSankeyData();
+	        d3.select('#sankey')
+	        .datum(data)
+	        .call(diagram);
+	
+	        heatMap.paintGradient(model);
+	      }
+	    }
+	
+	    const stop = () => {
+	      window.removeInterval(interval);
+	    }
+	
+	    play()
+	
+	
 	  });
+	
 	
 	
 	});
@@ -110,19 +136,19 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	const getImageData = (ctx, n) => {
+	const getImageData = (ctx, n, xdim, ydim) => {
 	    let dataset = [];
 	    let topLeftPixel = ctx.getImageData(0, 0, 1, 1).data;
 	    let zeroColor = topLeftPixel[0] + topLeftPixel[1] + topLeftPixel[2];
 	
 	    // sample color data from n random pixels
 	    for (let i = 0; i < n; i++) {
-	      let x = Math.floor(Math.random() * 250);
-	      let y = Math.floor(Math.random() * 250);
+	      let x = Math.floor(Math.random() * xdim);
+	      let y = Math.floor(Math.random() * ydim);
 	      let pixelData = ctx.getImageData(x, y, 1, 1).data;
 	      let color = pixelData[0] + pixelData[1] + pixelData[2];
 	      let group = color == zeroColor ? 0 : 1;
-	      dataset.push([group, (x-125)/125, (y-125)/125]);
+	      dataset.push([group, (x-(xdim/2))/(xdim/2), (y-(ydim/2))/(ydim/2)]);
 	    }
 	    return dataset;
 	};
@@ -556,6 +582,7 @@
 	      return n
 	    }
 	  },
+	  
 	  "tanh" : {
 	    "activation" : (n) => {
 	      let e2 = Math.exp(2*n)
@@ -16988,8 +17015,7 @@
 	const Model = __webpack_require__(2);
 	
 	class HeatMap {
-	  constructor(model, width, sampleSize, domain, container) {
-	  this.model = model;
+	  constructor(width, sampleSize, domain, container) {
 	  this.width = [0, width];
 	  this.height = [0, width];
 	  this.domain = domain;
@@ -17015,13 +17041,13 @@
 	      .style("height", this.height);
 	  }
 	
-	  paintGradient() {
+	  paintGradient(model) {
 	    let context = this.canvas.node().getContext("2d");
 	    let image = context.createImageData(this.domain[1], this.domain[1]);
 	    let p = 0;
 	    for (let x1 = 0; x1 < this.domain[1]; x1++) {
 	      for (let x2 = 0; x2 < this.domain[1]; x2++) {
-	        let value = this.model.modelFunction([(x2-125)/125, (x1-125)/125]);
+	        let value = model.modelFunction([(x2-(this.domain[1]/2))/(this.domain[1]/2), (x1-(this.domain[1]/2))/(this.domain[1]/2)]);
 	        let color = d3.rgb(this.colorScale(value));
 	        image.data[p++] = color.r;
 	        image.data[p++] = color.g;
