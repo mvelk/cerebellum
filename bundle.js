@@ -74,9 +74,9 @@
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-	    let dataset = getImageData(ctx, 1000);
+	    let dataset = getImageData(ctx, 500);
 	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.3);
-	    for (var i = 0; i < 500; i++) {
+	    for (var i = 0; i < 1000; i++) {
 	      model.iterate();
 	    }
 	    window.model = model;
@@ -170,6 +170,7 @@
 	    this.weightMatrices = this.createWeightMatrices();
 	  }
 	
+	  // Creates weight matrices according to each neuron layer
 	  createWeightMatrices() {
 	    let weightMatrices = [];
 	    // for each later, we need to map a_n (i elements) to a_n+1 (j elements)
@@ -181,6 +182,7 @@
 	    return weightMatrices;
 	  }
 	
+	  // runs forward, back propagation, and increments weights matrices
 	  iterate() {
 	    // accumulator for deltas of each layer
 	    let accumulator = this.getAccum();
@@ -194,7 +196,7 @@
 	    this.incrementWeights(accumulator);
 	  }
 	
-	  // creates array of vectors of 0s matching model's dimensions with bias
+	  // creates matrices of 0s matching dimensions of weight matrices
 	  getAccum() {
 	    let accum = [];
 	    let weightMatrix;
@@ -205,7 +207,7 @@
 	    return accum;
 	  }
 	
-	  // conducts forward prop for observation n, returns all neuron layers as 2D array
+	  // conducts forward prop for observation n, returns all neuron layers as an array containing column matrices
 	  forwardProp(n) {
 	    let layer = this.x.getCols(n,n+1);
 	    let layerValues = [layer]; // inputs are the first neuron layer
@@ -288,9 +290,7 @@
 	  }
 	
 	  calculateLoss(type){
-	    let x;
-	    let y;
-	    let N;
+	    let x, y, N, yVal, xVal, yHat;
 	    if (type === "training"){
 	      x = this.x;
 	      y = this.y;
@@ -302,9 +302,6 @@
 	    }
 	
 	    let sumLoss = 0;
-	    let yVal;
-	    let xVal;
-	    let yHat;
 	    for (var i = 0; i < N; i++) {
 	      yVal = y.getRows(i,i+1).array[0][0];
 	      xVal = x.getCols(i,i+1).transpose().array[0];
@@ -327,17 +324,18 @@
 	        nodes.push({"id":`${i+1}:${j+1}`})
 	      }
 	    }
-	    let currentMatrix;
+	    let currentMatrix, color;
 	    let links = [];
 	    for (var k = 0; k < this.weightMatrices.length; k++) {
 	      currentMatrix = this.weightMatrices[k]
 	      for (var i = 0; i < currentMatrix.n; i++) {
 	        for (var j = 0; j < currentMatrix.m; j++) {
+	          color = currentMatrix.array[i][j] < 0 ? "salmon" : "palegreen"
 	          links.push({
 	            "source": `${k+1}:${j}`,
 	            "target": `${k+2}:${i+1}`,
 	            "value": Math.abs(currentMatrix.array[i][j]),
-	            "color": "red"
+	            "color": color
 	          })
 	        }
 	      }
