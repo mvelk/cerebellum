@@ -74,13 +74,11 @@
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-	    let dataset = getImageData(ctx, 500);
-	    let model = new Model([2,4,2,1], dataset, dataset, "sigmoid", 0.3);
-	    console.log(model.calculateLoss("training"));
-	    for (var i = 0; i < 1000; i++) {
+	    let dataset = getImageData(ctx, 1000);
+	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.3);
+	    for (var i = 0; i < 500; i++) {
 	      model.iterate();
 	    }
-	    console.log(model.calculateLoss("training"));
 	    window.model = model;
 	
 	    // let heatMap = new HeatMap(model, 500, 500, [0, 500], d3.select("#resultViz"));
@@ -88,16 +86,16 @@
 	    // heatMap.paintGradient();
 	    // console.log(heatMap);
 	    let diagram = sankeyDiagram()
-	    .width(1000)
-	    .height(600)
-	    .margins({ left: 100, right: 160, top: 10, bottom: 10 })
-	    .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
-	    .linkTypeTitle(function(d) { return d.data.title; })
-	    .linkColor(function(d) { return d.data.color; });
+	      .width(1000)
+	      .height(600)
+	      .margins({ left: 100, right: 160, top: 10, bottom: 10 })
+	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
+	      .linkTypeTitle(function(d) { return d.data.title; })
+	      .linkColor(function(d) { return d.data.color; });
 	    let data = model.getSankeyData();
 	    d3.select('#sankey')
-	    .datum(data)
-	    .call(diagram);
+	      .datum(data)
+	      .call(diagram);
 	
 	    let heatMap = new HeatMap(model, 250, 250, [0, 250], d3.select("#heatmap"));
 	    heatMap.generate();
@@ -144,21 +142,27 @@
 	  constructor(model,data,testData,activationF,learningRate) {
 	    this.model = model; // the number of neurons in each layer, counting input and output layers
 	    this.length = model.length;
+	
+	    // functions contingent on activation function
 	    this.functions = Activation[activationF];
 	    this.activationF = this.functions["activation"];
 	    this.derivativeF = this.functions["derivative"];
+	    this.inputF = this.functions["input"]; // some activation functions require morphing of data
+	    this.outputF = this.functions["output"];
 	    this.lossF = Activation["loss"];
 	    this.learningRate = learningRate;
 	
 	    // training data
 	    this.data = new Matrix(data);
 	    this.y = this.data.getCols(0,1);
+	    this.y = this.y.elementWiseFunction(this.inputF);
 	    this.x = this.data.getCols(1,this.data.m);
 	    this.x = this.x.transpose(); // 1 observation per column
 	    this.N = this.data.n; // number of observations
 	    // test data
 	    this.testData = new Matrix(testData);
 	    this.testY = this.testData.getCols(0,1);
+	    this.testY = this.testY.elementWiseFunction(this.inputF);
 	    this.testX = this.testData.getCols(1,this.testData.m);
 	    this.testX = this.testX.transpose();
 	    this.testN = this.testData.n;
@@ -280,7 +284,7 @@
 	    }
 	
 	    // returns fitted y estimate
-	    return layerValues[this.length-1].array[0][0];
+	    return this.outputF(layerValues[this.length-1].array[0][0]);
 	  }
 	
 	  calculateLoss(type){
@@ -546,6 +550,12 @@
 	    },
 	    "derivative" : (n) => {
 	      return n*(1-n);
+	    },
+	    "input" : (n) => {
+	      return n
+	    },
+	    "output" : (n) => {
+	      return n
 	    }
 	  },
 	  "tanh" : {
@@ -557,6 +567,12 @@
 	      let e2 = Math.exp(2*n)
 	      let tanh = (e2-1)/(e2+1);
 	      return 1-tanh*tanh;
+	    },
+	    "input" : (n) => {
+	      return 2*n-1
+	    },
+	    "output" : (n) => {
+	      return (n+1)/2
 	    }
 	  },
 	  "loss" : (y,yHat) => {
