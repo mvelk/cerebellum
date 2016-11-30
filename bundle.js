@@ -57,13 +57,13 @@
 	
 	  let canvas = document.getElementById("myCanvas");
 	  let ctx = canvas.getContext("2d");
-	  let image = document.createElement("img");
-	  image.style.width = "250px";
-	  image.style.height = "auto";
 	  let sampleSize = 250;
 	
 	  // set img source
-	  let imgSrc = "../images/sample_data2.jpg";
+	  let image = document.createElement("img");
+	  image.style.width = "250px";
+	  image.style.height = "auto";
+	  let imgSrc = "../images/sample_data1.jpg";
 	  image.src = imgSrc;
 	
 	  // define canvas size
@@ -84,11 +84,10 @@
 	    let dataset = getImageData(ctx, sampleSize, canvasDim, canvasDim);
 	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.1);
 	    window.model = model;
-	    console.log(dataset);
 	
 	    let diagram = sankeyDiagram()
 	      .width(1400)
-	      .height(600)
+	      .height(800)
 	      .margins({ left: 40, right: 60, top: 10, bottom: 10 })
 	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	      .linkTypeTitle(function(d) { return d.data.title; })
@@ -352,17 +351,18 @@
 	        nodes.push({"id":`${i+1}:${j+1}`})
 	      }
 	    }
-	    let currentMatrix, color;
+	    let currentMatrix, color, sum;
 	    let links = [];
 	    for (var k = 0; k < this.weightMatrices.length; k++) {
 	      currentMatrix = this.weightMatrices[k]
+	      sum = currentMatrix.sumAbsAll();
 	      for (var i = 0; i < currentMatrix.n; i++) {
 	        for (var j = 0; j < currentMatrix.m; j++) {
 	          color = currentMatrix.array[i][j] < 0 ? "salmon" : "palegreen"
 	          links.push({
 	            "source": `${k+1}:${j}`,
 	            "target": `${k+2}:${i+1}`,
-	            "value": Math.abs(currentMatrix.array[i][j]),
+	            "value": Math.abs(currentMatrix.array[i][j])/sum,
 	            "color": color
 	          })
 	        }
@@ -478,6 +478,16 @@
 	    return newMatrix;
 	  }
 	
+	  sumAbsAll() {
+	    let sum = 0;
+	    for (var i = 0; i < this.n; i++) {
+	      for (var j = 0; j < this.m; j++) {
+	        sum += Math.abs(this.array[i][j]);
+	      }
+	    }
+	    return sum;
+	  }
+	
 	  // calls fn for each element of matrix and returns matrix of new values
 	  elementWiseFunction(fn) {
 	    let newMatrix = Matrix.emptyMatrix(this.n,this.m);
@@ -554,7 +564,7 @@
 	    for (var i = 0; i < n; i++) {
 	      row = [];
 	      for (var j = 0; j < m; j++) {
-	        row.push(Math.random()*10-5);
+	        row.push(Math.random()*2-1);
 	      }
 	      array[i] = row;
 	    }
@@ -17018,14 +17028,14 @@
 	
 	class HeatMap {
 	  constructor(canvasDim, sampleSize, domainDim, container) {
-	  this.width = [0, canvasDim];
-	  this.height = [0, canvasDim];
-	  this.domain = [0, domainDim];
-	  this.sampleSize = sampleSize;
-	  this.container = container;
-	  this.xScale = d3.scaleLinear().domain(this.domain).range(this.width);
-	  this.yScale = d3.scaleLinear().domain(this.domain).range(this.height);
-	  this.colorScale = d3.scaleLinear().domain([0, 1]).range(['palegreen', 'salmon']).clamp(true);
+	    this.width = canvasDim;
+	    this.height = canvasDim;
+	    this.domain = domainDim;
+	    this.sampleSize = sampleSize;
+	    this.container = container;
+	    this.xScale = d3.scaleLinear().domain([0, this.domain]).range([0, this.width]);
+	    this.yScale = d3.scaleLinear().domain([0, this.domain]).range([0, this.height]);
+	    this.colorScale = d3.scaleLinear().domain([0, 0.5, 1]).range(['palegreen', 'white', 'salmon']).clamp(true);
 	  }
 	
 	  generate() {
@@ -17037,19 +17047,23 @@
 	      }
 	    );
 	    this.canvas = d3.select("#heatmap").selectAll("div").append("canvas")
-	      .attr("width", this.domain[1])
-	      .attr("height", this.domain[1])
-	      .style("width", this.width)
-	      .style("height", this.height);
+	      .attr("width", this.domain)
+	      .attr("height", this.domain)
+	      // .style("width", this.width[1])
+	      // .style("height", this.height[1]);
+	
+	    this.context = this.canvas.node().getContext("2d");
+	    this.image = this.context.createImageData(this.domain, this.domain);
 	  }
 	
 	  paintGradient(model) {
-	    let context = this.canvas.node().getContext("2d");
-	    let image = context.createImageData(this.domain[1], this.domain[1]);
+	    let context = this.context;
+	    let image = this.image;
+	    let canvas = this.canvas;
 	    let p = 0;
-	    for (let x1 = 0; x1 < this.domain[1]; x1++) {
-	      for (let x2 = 0; x2 < this.domain[1]; x2++) {
-	        let value = model.modelFunction([(x2-(this.domain[1]/2))/(this.domain[1]/2), (x1-(this.domain[1]/2))/(this.domain[1]/2)]);
+	    for (let x1 = 0; x1 < this.domain; x1++) {
+	      for (let x2 = 0; x2 < this.domain; x2++) {
+	        let value = model.modelFunction([(x2-(this.domain/2))/(this.domain/2), (x1-(this.domain/2))/(this.domain/2)]);
 	        let color = d3.rgb(this.colorScale(value));
 	        image.data[p++] = color.r;
 	        image.data[p++] = color.g;
@@ -17058,6 +17072,16 @@
 	      }
 	    }
 	    context.putImageData(image, 0, 0);
+	    //
+	    // var imageObject=new Image();
+	    // imageObject.onload=function(){
+	    //
+	    //   context.clearRect(0,0,canvas.width,canvas.height);
+	    //   context.scale(2,2);
+	    //   context.drawImage(imageObject,0,0);
+	    //
+	    // }
+	    // imageObject.src=canvas.toDataURL();
 	  }
 	}
 	
