@@ -1,8 +1,39 @@
-$dark-purple:    #7441B2
-$light-purple:   #C290FF
-$medium-purple:  #B377FF
-$dark-yellow:    #B2B032
-$light-yellow:   #FFFD77
+$clr-deep-purple-list: ("base": #673ab7, "50":   #ede7f6, "100":  #d1c4e9, "200":  #b39ddb, "300":  #9575cd, "400":  #7e57c2, "500":  #673ab7, "600":  #5e35b1, "700":  #512da8, "800":  #4527a0, "900":  #311b92, "a100": #b388ff, "a200": #7c4dff, "a400": #651fff, "a700": #6200ea)
+
+$clr-deep-purple:      map-get($clr-deep-purple-list, "base")
+$clr-deep-purple-50:   map-get($clr-deep-purple-list, "50")
+$clr-deep-purple-100:  map-get($clr-deep-purple-list, "100")
+$clr-deep-purple-200:  map-get($clr-deep-purple-list, "200")
+$clr-deep-purple-300:  map-get($clr-deep-purple-list, "300")
+$clr-deep-purple-400:  map-get($clr-deep-purple-list, "400")
+$clr-deep-purple-500:  map-get($clr-deep-purple-list, "500")
+$clr-deep-purple-600:  map-get($clr-deep-purple-list, "600")
+$clr-deep-purple-700:  map-get($clr-deep-purple-list, "700")
+$clr-deep-purple-800:  map-get($clr-deep-purple-list, "800")
+$clr-deep-purple-900:  map-get($clr-deep-purple-list, "900")
+$clr-deep-purple-a100: map-get($clr-deep-purple-list, "a100")
+$clr-deep-purple-a200: map-get($clr-deep-purple-list, "a200")
+$clr-deep-purple-a400: map-get($clr-deep-purple-list, "a400")
+$clr-deep-purple-a700: map-get($clr-deep-purple-list, "a700")
+
+$clr-yellow-list: ("base": #ffeb3b, "50":   #fffde7, "100":  #fff9c4, "200":  #fff59d, "300":  #fff176, "400":  #ffee58, "500":  #ffeb3b, "600":  #fdd835, "700":  #fbc02d, "800":  #f9a825, "900":  #f57f17, "a100": #ffff8d, "a200": #ffff00, "a400": #ffea00, "a700": #ffd600)
+
+$clr-yellow:      map-get($clr-yellow-list, "base")
+
+$clr-yellow-50:   map-get($clr-yellow-list, "50")
+$clr-yellow-100:  map-get($clr-yellow-list, "100")
+$clr-yellow-200:  map-get($clr-yellow-list, "200")
+$clr-yellow-300:  map-get($clr-yellow-list, "300")
+$clr-yellow-400:  map-get($clr-yellow-list, "400")
+$clr-yellow-500:  map-get($clr-yellow-list, "500")
+$clr-yellow-600:  map-get($clr-yellow-list, "600")
+$clr-yellow-700:  map-get($clr-yellow-list, "700")
+$clr-yellow-800:  map-get($clr-yellow-list, "800")
+$clr-yellow-900:  map-get($clr-yellow-list, "900")
+$clr-yellow-a100: map-get($clr-yellow-list, "a100")
+$clr-yellow-a200: map-get($clr-yellow-list, "a200")
+$clr-yellow-a400: map-get($clr-yellow-list, "a400")
+$clr-yellow-a700: map-get($clr-yellow-list, "a700")
 
 *
   margin: 0
@@ -25,16 +56,11 @@ body
   padding: 3em 0
 
 main
+  font-size: .8em
+  line-height: 1.2em
+  color: rgba(0,0,0,0.5)
   background: whitesmoke
-#data
-  width: 100%
-  flex: 2
-#neurons
-  width: 100%
-  flex: 5
-#output
-  width: 100%
-  flex: 4
+
 @media screen and (min-device-width: 1200px) and (max-device-width: 1600px)
   html,
   body
@@ -87,10 +113,10 @@ header
   color: rgba(255, 255, 255, 1)
   padding: 1.5rem 0
   background: rgb(240, 240, 240)
-  background: -webkit-linear-gradient(left, #7441B2, #66389d)
-  background: -o-linear-gradient(right, #7441B2, #66389d)
-  background: -moz-linear-gradient(right, #7441B2, #66389d)
-  background: linear-gradient(to right, #7441B2, #66389d)
+  background: -webkit-linear-gradient(left, $clr-deep-purple-900, $clr-deep-purple-800)
+  background: -o-linear-gradient(right, $clr-deep-purple-900, $clr-deep-purple-800)
+  background: -moz-linear-gradient(right, $clr-deep-purple-900, $clr-deep-purple-800)
+  background: linear-gradient(to right, $clr-deep-purple-900, $clr-deep-purple-800)
 
   h1
     margin-bottom: 0rem
@@ -121,8 +147,18 @@ header
 #iterations
   font-size: 1.4rem
 
-.main h4
+.data-thumb
+  width: 50px
+  height: auto
+  padding: 10px 0
+
+h4
   text-transform: uppercase
+  color: rgba(0,0,0,0.9)
+  margin-bottom: 40px
+
+#neurons h4
+  margin-bottom: 0px
 
 .control-menu
   font-family: inherit
@@ -138,15 +174,18 @@ header
 .control-menu > option
   font-weight: 300
 
-
+.awesome-font-isnt-so-awesome
+  position: absolute
+  top: 14px
+  left: 22px
 
 .circular-raised-button
+  position: relative
   display: block
   width: 2.5rem
   height: 2.5rem
   border-radius: 50%
-  background: $dark-yellow
-  display: flex
+  background: $clr-yellow-a200
   justify-content: center
   align-items: center
   box-shadow: 0 .1rem .2rem 0 rgba(0, 0, 0, 0.26)
@@ -157,8 +196,7 @@ header
     transition: box-shadow 0.3s ease-in-out
 
   i
-    position: relative
-    color: white
+    color: rgba(0,0,0,0.6)
 
 .circular-icon-button
   display: block
@@ -170,21 +208,25 @@ header
   justify-content: center
   align-items: center
 
+  i
+    color: rgba(0,0,0,0.6)
+
   &:hover
     background: rgba(0,0,0,0.1)
     cursor: pointer
-
-  i
-    position: relative
-    color: rgba(0, 0, 0, 0.7)
 
 .big
   width: 3rem
   height: 3rem
 
-#sankey
-  float: left
-#myCanvas
-  float: left
-#heatmap
-  float: left
+#data
+  width: 100%
+  flex: 2
+  margin-right: 1.5em
+#neurons
+  width: 100%
+  flex: 5
+  margin-right: 1.5em
+#output
+  width: 100%
+  flex: 4
