@@ -113,7 +113,7 @@
 	      iterations = 0;
 	      iterationsEl.textContent = iterations;
 	      render();
-	    }
+	    };
 	
 	    const render = () => {
 	      // update sankey links
@@ -121,7 +121,7 @@
 	      d3.select('#sankey').datum(data).call(diagram);
 	      // update heatmap
 	      heatMap.paintGradient(model);
-	    }
+	    };
 	
 	    const increment = () => {
 	      model.iterate();
@@ -147,28 +147,28 @@
 	      } else {
 	        stop();
 	      }
-	    })
+	    });
 	
 	    resetButton.addEventListener("click",(e)=>{
 	      reset();
-	    })
+	    });
 	
 	    incrementButton.addEventListener("click",(e)=>{
 	      model.iterate();
 	      iterations ++;
 	      iterationsEl.textContent = iterations+"";
 	      render();
-	    })
+	    });
 	
 	    learningRateEl.addEventListener("change",(e)=>{
 	      learningRate = e.currentTarget.value;
 	      reset();
-	    })
+	    });
 	
 	    activationFEl.addEventListener("change",(e)=>{
 	      activationF = e.currentTarget.value;
 	      reset();
-	    })
+	    });
 	
 	
 	    reset();
@@ -17093,11 +17093,28 @@
 	    this.realCanvas = d3.select("#real-heatmap").append("canvas")
 	      .attr("width", this.width)
 	      .attr("height", this.height);
-	
 	    this.context = this.canvas.node().getContext("2d");
 	    this.realContext = this.realCanvas.node().getContext("2d");
-	    this.realContext.scale(this.width/this.domain,this.height/this.domain)
+	    this.realContext.scale(this.width / this.domain, this.height / this.domain);
 	    this.image = this.context.createImageData(this.domain, this.domain);
+	
+	    let container = d3.select("#real-heatmap");
+	    this.scatterPlot = container.append("svg")
+	    .attr("width", this.width)
+	    .attr("height", this.height)
+	    .style({
+	      "position": "absolute",
+	      "top": "0",
+	      "left": "0"
+	    });
+	    window.scatterPlot = this.scatterPlot;
+	
+	    this.scatterPlot.append("g").attr("class", "testingData");
+	    this.scatterPlot.append("g").attr("class", "trainingData");
+	  }
+	
+	  updateScatter() {
+	
 	  }
 	
 	  paintGradient(model) {
