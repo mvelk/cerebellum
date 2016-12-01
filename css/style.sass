@@ -1,0 +1,106 @@
+$dark-purple:    #7441B2
+$light-purple:   #C290FF
+$medium-purple:  #B377FF
+$dark-yellow:    #B2B032
+$light-yellow:   #FFFD77
+
+*
+  margin: 0
+  padding: 0
+  border: 0
+  font-size: 100%
+  font: inherit
+  vertical-align: baseline
+  background: transparent
+  text-rendering: optimizeLegibility
+
+
+body
+  font-family: 'Lato', sans-serif
+  color: rgba(0, 0, 0, 0.87)
+  font-size: 1rem
+  line-height: 1.5rem
+
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px)
+  html,
+  body
+    font-size: 18px
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6
+  font-family: 'Fira Sans', sans-serif
+  font-weight: 300
+
+h1,
+h2
+  font-size: 2.625rem
+  margin-bottom: 1.25rem
+  line-height: 3.25rem
+
+h3
+  font-size: 1.625rem
+  margin-bottom: 1rem
+  line-height: 2.4375rem
+
+p
+  margin-bottom: 1.333rem
+
+.content-wrapper
+  max-width: 33.0625rem
+  padding: 1.5rem
+
+.card
+  margin-bottom: 2rem
+  padding: 2rem 2rem
+  background-color: white
+  border-radius: 0.25rem
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
+
+.icon
+    width: 70px
+    height: 70px
+    margin: 55px
+    position: relative
+
+.icon span,
+.icon
+    transition: all 500ms ease
+
+.icon span
+    background-color: #fff
+    display: block
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+
+header
+  width: 100%
+  color: rgba(255, 255, 255, 1)
+  padding: 1.5rem
+  background: rgb(240, 240, 240)
+  background: -webkit-linear-gradient(left, #7441B2, #66389d)
+  background: -o-linear-gradient(right, #7441B2, #66389d)
+  background: -moz-linear-gradient(right, #7441B2, #66389d)
+  background: linear-gradient(to right, #7441B2, #66389d)
+
+  h1
+    margin-bottom: 0rem
+    letter-spacing: 0.2rem
+
+  .subtitle
+    font-family: 'Lato', sans-serif
+    font-weight: 300
+    font-size: 1.5rem
+    color: rgba(255, 255, 255, 0.7)
+
+#sankey
+  float: left
+#myCanvas
+  float: left
+#heatmap
+  float: left
