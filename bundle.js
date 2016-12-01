@@ -65,7 +65,7 @@
 	  let incrementButton = document.getElementById("increment-button");
 	  let resetButton = document.getElementById("reset-button");
 	  let dataGallery = document.getElementById("data-thumb-gallery");
-	
+	  console.log(dataGallery);
 	  // define input size
 	  let inputDim = 300;
 	  canvas.width = inputDim;
@@ -79,8 +79,16 @@
 	  image.style.width = "250px";
 	  image.style.height = "auto";
 	  image.id = "data-image"
-	  let imgSrc = "../images/sample_data1.jpg";
+	  let imgSrc = "http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578743/sample_data1_ueqzur.jpg";
 	  image.src = imgSrc;
+	
+	  dataGallery.addEventListener("click", updateDataImage);
+	
+	  function updateDataImage(e) {
+	    let newImageUrl = e.target.getAttribute('data-image-url');
+	    image.src = imgSrc;
+	    e.stopPropagation();
+	  };
 	
 	  // set model variables
 	  let dataset, model, data;
@@ -142,10 +150,6 @@
 	    const stop = () => {
 	      interval = window.clearInterval(interval);
 	    };
-	
-	    dataLinks.addEventListener("click",()=>{
-	
-	    })
 	
 	    playButton.addEventListener("click",()=>{
 	      let icon = document.getElementById('play-pause');
