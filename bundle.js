@@ -55,7 +55,7 @@
 	document.addEventListener("DOMContentLoaded", () => {
 	  // create elements
 	
-	  let canvas = document.getElementById("myCanvas");
+	  let canvas = document.getElementById("data-sampler");
 	  let ctx = canvas.getContext("2d");
 	  let sampleSize = 250;
 	
@@ -67,6 +67,7 @@
 	  image.src = imgSrc;
 	
 	  // define canvas size
+	
 	  let canvasDim = 300;
 	  canvas.width = canvasDim;
 	  canvas.height = canvasDim;
@@ -81,13 +82,13 @@
 	  // on image load, draw image then sample pixel data
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasDim, canvasDim);
-	    let dataset = getImageData(ctx, sampleSize, canvasDim, canvasDim);
+	    let dataset = getImageData(ctx, sampleSize, canvasDim);
 	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.1);
 	    window.model = model;
 	
 	    let diagram = sankeyDiagram()
-	      .width(1200)
-	      .height(600)
+	      .width(800)
+	      .height(500)
 	      .margins({ left: 40, right: 60, top: 10, bottom: 10 })
 	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	      .linkTypeTitle(function(d) { return d.data.title; })
@@ -103,8 +104,8 @@
 	    heatMap.paintGradient(model);
 	
 	    const play = () => {
-	      interval = window.setInterval(increment, 1)
-	    }
+	      interval = window.setInterval(increment, 1);
+	    };
 	
 	    const increment = () => {
 	      model.iterate();
@@ -117,13 +118,13 @@
 	
 	        heatMap.paintGradient(model);
 	      }
-	    }
+	    };
 	
 	    const stop = () => {
 	      window.removeInterval(interval);
-	    }
+	    };
 	
-	    play()
+	    play();
 	
 	
 	  });
