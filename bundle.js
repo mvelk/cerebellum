@@ -64,7 +64,8 @@
 	  let playButton = document.getElementById("play-button");
 	  let incrementButton = document.getElementById("increment-button");
 	  let resetButton = document.getElementById("reset-button");
-	
+	  let dataGallery = document.getElementById("data-thumb-gallery");
+	  console.log(dataGallery);
 	  // define input size
 	  let inputDim = 300;
 	  canvas.width = inputDim;
@@ -77,8 +78,17 @@
 	  let image = document.createElement("img");
 	  image.style.width = "250px";
 	  image.style.height = "auto";
-	  let imgSrc = "../images/sample_data1.jpg";
+	  image.id = "data-image"
+	  let imgSrc = "http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578743/sample_data1_ueqzur.jpg";
 	  image.src = imgSrc;
+	
+	  dataGallery.addEventListener("click", updateDataImage);
+	
+	  function updateDataImage(e) {
+	    let newImageUrl = e.target.getAttribute('data-image-url');
+	    image.src = imgSrc;
+	    e.stopPropagation();
+	  };
 	
 	  // set model variables
 	  let dataset, model, data;
@@ -93,7 +103,7 @@
 	  let diagram = sankeyDiagram()
 	    .width(800)
 	    .height(500)
-	    .margins({ left: 40, right: 60, top: 10, bottom: 10 })
+	    .margins({ left: 40, right: 0, top: 0, bottom: 0 })
 	    .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	    .linkTypeTitle(function(d) { return d.data.title; })
 	    .linkColor(function(d) { return d.data.color; })
@@ -142,6 +152,15 @@
 	    };
 	
 	    playButton.addEventListener("click",()=>{
+	      let icon = document.getElementById('play-pause');
+	      console.log(icon.classList[1]);
+	      if (icon.classList[1] == "fa-play") {
+	        icon.classList.remove('fa-play');
+	        icon.classList.add('fa-pause');
+	      } else {
+	        icon.classList.remove('fa-pause');
+	        icon.classList.add('fa-play');
+	      }
 	      if (interval === undefined) {
 	        play();
 	      } else {
@@ -378,7 +397,7 @@
 	    for (var i = 0; i < N; i++) {
 	      yVal = y.getRows(i,i+1).array[0][0];
 	      xVal = x.getCols(i,i+1).transpose().array[0];
-	      yHat = this.modelFunction(xVal)
+	      yHat = this.modelFunction(xVal);
 	      sumLoss += this.lossF(yVal, yHat);
 	    }
 	    sumLoss /= N;
@@ -390,31 +409,31 @@
 	    for (var i = 0; i < this.length; i++) {
 	      // adds bias neuron node
 	      if (i != this.length){
-	        nodes.push({"id":`${i+1}:0`})
+	        nodes.push({"id":`${i+1}:0`});
 	      }
 	      // adds one node for each neuron
 	      for (var j = 0; j < this.model[i]; j++) {
-	        nodes.push({"id":`${i+1}:${j+1}`})
+	        nodes.push({"id":`${i+1}:${j+1}`});
 	      }
 	    }
 	    let currentMatrix, color, sum;
 	    let links = [];
 	    for (var k = 0; k < this.weightMatrices.length; k++) {
-	      currentMatrix = this.weightMatrices[k]
+	      currentMatrix = this.weightMatrices[k];
 	      sum = currentMatrix.sumAbsAll();
 	      for (var i = 0; i < currentMatrix.n; i++) {
 	        for (var j = 0; j < currentMatrix.m; j++) {
-	          color = currentMatrix.array[i][j] < 0 ? "salmon" : "palegreen"
+	          color = currentMatrix.array[i][j] < 0 ? "#b39ddb" : "#ffff8d";
 	          links.push({
 	            "source": `${k+1}:${j}`,
 	            "target": `${k+2}:${i+1}`,
 	            "value": Math.abs(currentMatrix.array[i][j])/sum,
 	            "color": color
-	          })
+	          });
 	        }
 	      }
 	    }
-	    return {"nodes":nodes, "links":links}
+	    return {"nodes":nodes, "links":links};
 	  }
 	}
 	
@@ -17081,11 +17100,12 @@
 	    this.container = container;
 	    this.xScale = d3.scaleLinear().domain([0, this.domain]).range([0, this.width]);
 	    this.yScale = d3.scaleLinear().domain([0, this.domain]).range([0, this.height]);
-	    this.colorScale = d3.scaleLinear().domain([0, 0.5, 1]).range(['palegreen', 'white', 'salmon']).clamp(true);
+	    this.colorScale = d3.scaleLinear().domain([0, 0.5, 1]).range(['#b39ddb', 'white', '#ffff8d']).clamp(true);
 	  }
 	
 	  generate() {
-	    window.container = this.container;
+	    d3.select("#real-heatmap").style("position", "relative");
+	
 	    this.canvas = d3.select("#heatmap").append("canvas")
 	      .attr("width", this.domain)
 	      .attr("height", this.domain);
@@ -17099,18 +17119,15 @@
 	    this.image = this.context.createImageData(this.domain, this.domain);
 	
 	    let container = d3.select("#real-heatmap");
-	    this.scatterPlot = container.append("svg")
-	    .attr("width", this.width)
-	    .attr("height", this.height)
-	    .style({
-	      "position": "absolute",
-	      "top": "0",
-	      "left": "0"
-	    });
+	    this.scatterPlot = container.append("svg");
+	    this.scatterPlot.attr("width", this.width)
+	      .attr("height", this.height)
+	      .style("position", "absolute")
+	      .style("left", "0")
+	      .style("top", "0");
 	    window.scatterPlot = this.scatterPlot;
 	
-	    this.scatterPlot.append("g").attr("class", "testingData");
-	    this.scatterPlot.append("g").attr("class", "trainingData");
+	
 	  }
 	
 	  updateScatter() {

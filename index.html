@@ -20,7 +20,7 @@
       <div class="content-wrapper flexed">
         <div class="player-controls">
           <a class="circular-icon-button" id="reset-button"><i class="fa fa-refresh"></i></a>
-          <a class="circular-raised-button big" id="play-button"><i class="fa fa-play"></i></a>
+          <a class="circular-raised-button big" id="play-button"><div class="awesome-font-isnt-so-awesome"><i id="play-pause" class="fa fa-play"></i></div></a>
           <a class="circular-icon-button" id="increment-button"><i class="fa fa-step-forward"></i></a>
         </div>
         <div class="control">
@@ -56,12 +56,16 @@
 
       <div id="data">
         <h4>Data</h4>
-
+        Select whatever dataset you feel like and let the hype ensue.
+        <div id="data-thumb-gallery">
+            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578743/sample_data1_ueqzur.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578743/sample_data1_ueqzur.jpg"/>
+            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578748/sample_data2_e63tk6.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578748/sample_data2_e63tk6.jpg"/>
+            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578751/sample_data3_u2tlnj.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578751/sample_data3_u2tlnj.jpg"/>
+            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578753/sample_data4_g78zi4.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578753/sample_data4_g78zi4.jpg"/>
+        </div>
       </div>
       <div id="neurons">
         <h4>Neurons</h4>
-        <a class="circular-raised-button"><i class="fa fa-plus"></i></a>
-        <a class="circular-raised-button"><i class="fa fa-minus"></i></a>
         <div id="sankey"></div>
       </div>
       <div id="output">
@@ -70,7 +74,6 @@
       </div>
     </div>
   </main>
-    <a class="circular-raised-button"><i class="fa fa-plus"></i></a>
     <canvas id="myCanvas"></canvas>
     <div id="heatmap" style="display:none"></div>
     <div id="real-heatmap"></div>
