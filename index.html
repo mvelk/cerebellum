@@ -11,18 +11,68 @@
   </head>
   <body>
     <header>
-      <h1>cerebellum</h1>
-      <span class="subtitle">Explore a neural network without leaving your browser.</span>
+      <div class="content-wrapper">
+        <h1>cerebellum</h1>
+        <span class="subtitle">Explore a neural network without leaving your browser.</span>
+      </div>
     </header>
-    <aside class="controls">
-      <a><i class="fa fa-play"/></a>
-    </aside>
+    <nav class="controls">
+      <div class="content-wrapper flexed">
+        <div class="player-controls">
+          <a class="circular-icon-button"><i class="fa fa-refresh"></i></a>
+          <a class="circular-raised-button big"><i class="fa fa-play"></i></a>
+          <a class="circular-icon-button"><i class="fa fa-step-forward"></i></a>
+        </div>
+        <div class="control">
+          <h3>Iterations</h3>
+          <span class="control-value" id="iterations">000,000</span>
+        </div>
+        <div class="control">
+          <h3>Learning Rate</h3>
+          <select class="control-menu" id="learning-rate">
+            <option value="0.00001">0.00001</option>
+            <option value="0.0001">0.0001</option>
+            <option value="0.001">0.001</option>
+            <option value="0.003">0.003</option>
+            <option value="0.01">0.03</option>
+            <option value="0.03">0.03</option>
+            <option value="0.1">0.1</option>
+            <option value="0.3">0.3</option>
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        <div class="control">
+          <h3>Activation Function</h3>
+          <select class="control-menu" id="activation-function">
+            <option value="sigmoid">Sigmoid</option></option>
+            <option value="tanh">Tanh</option>
+          </select>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="content-wrapper flexed padded">
+
+      <div id="data">
+        <h4>Data</h4>
+      </div>
+      <div id="neurons">
+        <h4>Neurons</h4>
+      </div>
+      <div id="output">
+        <h4>Output</h4>
+      </div>
+    </div>
+  </main>
+    <!-- <a class="circular-raised-button"><i class="fa fa-plus"></i></a>
     <canvas id="myCanvas"></canvas>
     <div id="heatmap" style="display:none"></div>
     <div id="real-heatmap"></div>
     <div id="sankey"></div>
     <div id="heatmap"></div>
-    <footer>
+    <footer> -->
 
     </footer>
   </body>

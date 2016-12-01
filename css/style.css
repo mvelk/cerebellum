@@ -1,38 +1,182 @@
-/*
-Error: The line was indented 2 levels deeper than the previous line.
-        on line 64 of css/style.sass
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  background: transparent;
+  text-rendering: optimizeLegibility; }
 
-59:   background-color: white
-60:   border-radius: 0.25rem
-61:   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
-62: 
-63: .icon
-64:     width: 70px
-65:     height: 70px
-66:     margin: 55px
-67:     position: relative
-68: 
-69: .icon span,
+body {
+  font-family: "Lato", sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1rem;
+  line-height: 1.5rem; }
 
-Backtrace:
-css/style.sass:64
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:520:in `tree'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:409:in `_to_tree'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:381:in `_render_with_sourcemap'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:298:in `render_with_sourcemap'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `each'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:473:in `on_file_changed'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:331:in `block in watch'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/vendor/listen/lib/listen/listener.rb:252:in `on_change'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/vendor/listen/lib/listen/listener.rb:290:in `block in initialize_adapter'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/vendor/listen/lib/listen/adapter.rb:254:in `report_changes'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/vendor/listen/lib/listen/adapter.rb:323:in `poll_changed_directories'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/vendor/listen/lib/listen/adapter.rb:299:in `block in start_poller'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: The line was indented 2 levels deeper than the previous line.\A         on line 64 of css/style.sass\A \A 59:   background-color: white\A 60:   border-radius: 0.25rem\A 61:   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)\A 62: \A 63: .icon\A 64:     width: 70px\A 65:     height: 70px\A 66:     margin: 55px\A 67:     position: relative\A 68: \A 69: .icon span,"; }
+.padded {
+  padding: 3em 0; }
+
+main {
+  background: whitesmoke;
+  height: 600px; }
+
+#data {
+  width: 100%;
+  flex: 2; }
+
+#neurons {
+  width: 100%;
+  flex: 5; }
+
+#output {
+  width: 100%;
+  flex: 4; }
+
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
+  html,
+  body {
+    font-size: 18px; } }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 300; }
+
+h1,
+h2 {
+  font-size: 2.625rem;
+  margin-bottom: 1.25rem;
+  line-height: 3.25rem; }
+
+h3 {
+  font-size: 1.625rem;
+  margin-bottom: 1rem;
+  line-height: 2.4375rem; }
+
+p {
+  margin-bottom: 1.333rem; }
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: auto; }
+
+.card {
+  margin-bottom: 2rem;
+  padding: 2rem 2rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); }
+
+.flexed {
+  display: flex; }
+
+nav {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); }
+
+header {
+  width: 100%;
+  color: white;
+  padding: 1.5rem 0;
+  background: #f0f0f0;
+  background: -webkit-linear-gradient(left, #7441B2, #66389d);
+  background: -o-linear-gradient(right, #7441B2, #66389d);
+  background: -moz-linear-gradient(right, #7441B2, #66389d);
+  background: linear-gradient(to right, #7441B2, #66389d); }
+  header h1 {
+    margin-bottom: 0rem;
+    letter-spacing: 0.2rem; }
+  header .subtitle {
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7); }
+
+.control {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem; }
+  .control h3 {
+    font-family: "Lato", sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 0.8rem;
+    line-height: 1rem;
+    margin-bottom: 0.2rem; }
+
+.player-controls {
+  display: flex;
+  align-items: center; }
+
+#iterations {
+  font-size: 1.4rem; }
+
+.main h4 {
+  text-transform: uppercase; }
+
+.control-menu {
+  font-family: inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: 0.1rem;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
+
+.control-value,
+.control-menu > option {
+  font-weight: 300; }
+
+.circular-raised-button {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #B2B032;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.26); }
+  .circular-raised-button:hover {
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.26);
+    transition: box-shadow 0.3s ease-in-out; }
+  .circular-raised-button i {
+    position: relative;
+    color: white; }
+
+.circular-icon-button {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .circular-icon-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer; }
+  .circular-icon-button i {
+    position: relative;
+    color: rgba(0, 0, 0, 0.7); }
+
+.big {
+  width: 3rem;
+  height: 3rem; }
+
+#sankey {
+  float: left; }
+
+#myCanvas {
+  float: left; }
+
+#heatmap {
+  float: left; }
+
+/*# sourceMappingURL=style.css.map */
