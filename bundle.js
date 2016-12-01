@@ -67,7 +67,7 @@
 	  image.src = imgSrc;
 	
 	  // define canvas size
-	  let canvasDim = 200;
+	  let canvasDim = 300;
 	  canvas.width = canvasDim;
 	  canvas.height = canvasDim;
 	
@@ -86,8 +86,8 @@
 	    window.model = model;
 	
 	    let diagram = sankeyDiagram()
-	      .width(1400)
-	      .height(800)
+	      .width(1200)
+	      .height(600)
 	      .margins({ left: 40, right: 60, top: 10, bottom: 10 })
 	      .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	      .linkTypeTitle(function(d) { return d.data.title; })
@@ -344,11 +344,11 @@
 	    for (var i = 0; i < this.length; i++) {
 	      // adds bias neuron node
 	      if (i != this.length){
-	        nodes.push({"id":`${i+1}:0`})
+	        nodes.push({"id":`${i+1}:0`,"width":20,"height":20})
 	      }
 	      // adds one node for each neuron
 	      for (var j = 0; j < this.model[i]; j++) {
-	        nodes.push({"id":`${i+1}:${j+1}`})
+	        nodes.push({"id":`${i+1}:${j+1}`,"direction":"r","height":20})
 	      }
 	    }
 	    let currentMatrix, color, sum;
@@ -17040,24 +17040,23 @@
 	
 	  generate() {
 	    window.container = this.container;
-	    this.container.append("div").style(
-	      {
-	        width: `${this.width}px`,
-	        height: `${this.height}px`
-	      }
-	    );
-	    this.canvas = d3.select("#heatmap").selectAll("div").append("canvas")
+	    this.canvas = d3.select("#heatmap").append("canvas")
 	      .attr("width", this.domain)
-	      .attr("height", this.domain)
-	      // .style("width", this.width[1])
-	      // .style("height", this.height[1]);
+	      .attr("height", this.domain);
+	
+	    this.realCanvas = d3.select("#real-heatmap").append("canvas")
+	      .attr("width", this.width)
+	      .attr("height", this.height);
 	
 	    this.context = this.canvas.node().getContext("2d");
+	    this.realContext = this.realCanvas.node().getContext("2d");
+	    this.realContext.scale(this.width/this.domain,this.height/this.domain)
 	    this.image = this.context.createImageData(this.domain, this.domain);
 	  }
 	
 	  paintGradient(model) {
 	    let context = this.context;
+	    let realContext = this.realContext;
 	    let image = this.image;
 	    let canvas = this.canvas;
 	    let p = 0;
@@ -17072,16 +17071,7 @@
 	      }
 	    }
 	    context.putImageData(image, 0, 0);
-	    //
-	    // var imageObject=new Image();
-	    // imageObject.onload=function(){
-	    //
-	    //   context.clearRect(0,0,canvas.width,canvas.height);
-	    //   context.scale(2,2);
-	    //   context.drawImage(imageObject,0,0);
-	    //
-	    // }
-	    // imageObject.src=canvas.toDataURL();
+	    realContext.drawImage(context.canvas, 0, 0);
 	  }
 	}
 	
