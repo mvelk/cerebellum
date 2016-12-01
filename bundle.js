@@ -111,7 +111,7 @@
 	      // creates model
 	      model = new Model(neuralNet, dataset, dataset, activationF, learningRate);
 	      iterations = 0;
-	      iterationsEl.textContent = iterations+"";
+	      iterationsEl.textContent = iterations;
 	      render();
 	    };
 	
@@ -126,7 +126,7 @@
 	    const increment = () => {
 	      model.iterate();
 	      iterations ++;
-	      iterationsEl.textContent = iterations+"";
+	      iterationsEl.textContent = iterations;
 	      if (iterations % 10 === 0){
 	        render();
 	      }
@@ -17085,7 +17085,8 @@
 	  }
 	
 	  generate() {
-	    window.container = this.container;
+	    d3.select("#real-heatmap").style("position", "relative");
+	
 	    this.canvas = d3.select("#heatmap").append("canvas")
 	      .attr("width", this.domain)
 	      .attr("height", this.domain);
@@ -17099,18 +17100,15 @@
 	    this.image = this.context.createImageData(this.domain, this.domain);
 	
 	    let container = d3.select("#real-heatmap");
-	    this.scatterPlot = container.append("svg")
-	    .attr("width", this.width)
-	    .attr("height", this.height)
-	    .style({
-	      "position": "absolute",
-	      "top": "0",
-	      "left": "0"
-	    });
+	    this.scatterPlot = container.append("svg");
+	    this.scatterPlot.attr("width", this.width)
+	      .attr("height", this.height)
+	      .style("position", "absolute")
+	      .style("left", "0")
+	      .style("top", "0");
 	    window.scatterPlot = this.scatterPlot;
 	
-	    this.scatterPlot.append("g").attr("class", "testingData");
-	    this.scatterPlot.append("g").attr("class", "trainingData");
+	
 	  }
 	
 	  updateScatter() {
