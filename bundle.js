@@ -83,6 +83,7 @@
 	  image.addEventListener("load", function () {
 	    ctx.drawImage(image, 0, 0, canvasDim, canvasDim);
 	    let dataset = getImageData(ctx, sampleSize, canvasDim);
+	    window.dataset = dataset;
 	    let model = new Model([2,4,2,1], dataset, dataset, "tanh", 0.1);
 	    window.model = model;
 	
@@ -17051,8 +17052,24 @@
 	
 	    this.context = this.canvas.node().getContext("2d");
 	    this.realContext = this.realCanvas.node().getContext("2d");
-	    this.realContext.scale(this.width/this.domain,this.height/this.domain)
+	    this.realContext.scale(this.width / this.domain, this.height / this.domain);
 	    this.image = this.context.createImageData(this.domain, this.domain);
+	
+	    this.scatterPlot = d3.select("#real-heatmap").append("svg")
+	      .attr("width", this.width)
+	      .attr("height", this.height)
+	      .style({
+	        "position": "absolute",
+	        "top": "0",
+	        "left": "0"
+	      });
+	
+	    this.scatterPlot.append("g").attr("class", "testingData");
+	    this.scatterPlot.append("g").attr("class", "trainingData");
+	  }
+	
+	  updateScatter() {
+	    
 	  }
 	
 	  paintGradient(model) {
