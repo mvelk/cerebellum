@@ -65,7 +65,6 @@
 	  let incrementButton = document.getElementById("increment-button");
 	  let resetButton = document.getElementById("reset-button");
 	  let dataGallery = document.getElementById("data-thumb-gallery");
-	  console.log(dataGallery);
 	  // define input size
 	  let inputDim = 300;
 	  canvas.width = inputDim;
@@ -79,16 +78,8 @@
 	  image.style.width = "250px";
 	  image.style.height = "auto";
 	  image.id = "data-image"
-	  let imgSrc = "http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578743/sample_data1_ueqzur.jpg";
+	  let imgSrc = "images/sample_data1.jpg";
 	  image.src = imgSrc;
-	
-	  dataGallery.addEventListener("click", updateDataImage);
-	
-	  function updateDataImage(e) {
-	    let newImageUrl = e.target.getAttribute('data-image-url');
-	    image.src = imgSrc;
-	    e.stopPropagation();
-	  };
 	
 	  // set model variables
 	  let dataset, model, data;
@@ -110,6 +101,7 @@
 	    .linkOpacity(0.7);
 	  let heatMap = new HeatMap(inputDim, sampleSize, outputDim, d3.select("#heatmap"));
 	  heatMap.generate();
+	  window.image = image;
 	
 	  // on image load, initialize model and add listeners
 	  image.addEventListener("load", function () {
@@ -151,9 +143,19 @@
 	      interval = window.clearInterval(interval);
 	    };
 	
-	    playButton.addEventListener("click",()=>{
+	    //swaps out dataset image and resets network
+	    dataGallery.addEventListener("click", (e) => {
+	      let newImageUrl = e.target.getAttribute("data-image-url");
+	      image.src = newImageUrl;
+	      reset();
+	      e.stopPropagation()
+	    });
+	
+	
+	    playButton.addEventListener("click",(e)=>{
+	      console.log("clicked");
+	      e.preventDefault();
 	      let icon = document.getElementById('play-pause');
-	      console.log(icon.classList[1]);
 	      if (icon.classList[1] == "fa-play") {
 	        icon.classList.remove('fa-play');
 	        icon.classList.add('fa-pause');
@@ -161,6 +163,7 @@
 	        icon.classList.remove('fa-pause');
 	        icon.classList.add('fa-play');
 	      }
+	      console.log(interval);
 	      if (interval === undefined) {
 	        play();
 	      } else {
