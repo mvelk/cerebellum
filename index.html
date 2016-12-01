@@ -19,9 +19,9 @@
     <nav class="controls">
       <div class="content-wrapper flexed">
         <div class="player-controls">
-          <a class="circular-icon-button"><i class="fa fa-refresh"></i></a>
-          <a class="circular-raised-button big"><i class="fa fa-play"></i></a>
-          <a class="circular-icon-button"><i class="fa fa-step-forward"></i></a>
+          <a class="circular-icon-button" id="reset-button"><i class="fa fa-refresh"></i></a>
+          <a class="circular-raised-button big" id="play-button"><i class="fa fa-play"></i></a>
+          <a class="circular-icon-button" id="increment-button"><i class="fa fa-step-forward"></i></a>
         </div>
         <div class="control">
           <h3>Iterations</h3>
@@ -57,12 +57,17 @@
 
       <div id="data">
         <h4>Data</h4>
+
       </div>
       <div id="neurons">
         <h4>Neurons</h4>
+        <a class="circular-raised-button"><i class="fa fa-plus"></i></a>
+        <a class="circular-raised-button"><i class="fa fa-minus"></i></a>
+        <div id="sankey"></div>
       </div>
       <div id="output">
         <h4>Output</h4>
+        <div id="real-heatmap"></div>
       </div>
     </div>
   </main>
@@ -73,6 +78,13 @@
     <div id="sankey"></div>
     <footer>
 
+
+
+
+
+    <footer>
+      <div id="heatmap" style="display:none"></div>
+      <canvas id="data-sampler" style="display: none"></canvas>
     </footer>
   </body>
 </html>
