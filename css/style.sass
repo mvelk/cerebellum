@@ -21,6 +21,21 @@ body
   font-size: 1rem
   line-height: 1.5rem
 
+.padded
+  padding: 3em 0
+
+main
+  background: whitesmoke
+  height: 600px
+#data
+  width: 100%
+  flex: 2
+#neurons
+  width: 100%
+  flex: 5
+#output
+  width: 100%
+  flex: 4
 @media screen and (min-device-width: 1200px) and (max-device-width: 1600px)
   html,
   body
@@ -50,8 +65,8 @@ p
   margin-bottom: 1.333rem
 
 .content-wrapper
-  max-width: 33.0625rem
-  padding: 1.5rem
+  max-width: 1200px
+  margin: auto
 
 .card
   margin-bottom: 2rem
@@ -60,28 +75,18 @@ p
   border-radius: 0.25rem
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
 
-.icon
-    width: 70px
-    height: 70px
-    margin: 55px
-    position: relative
+.flexed
+  display: flex
 
-.icon span,
-.icon
-    transition: all 500ms ease
-
-.icon span
-    background-color: #fff
-    display: block
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
+nav
+  padding: 1rem
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3)
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08)
 
 header
   width: 100%
   color: rgba(255, 255, 255, 1)
-  padding: 1.5rem
+  padding: 1.5rem 0
   background: rgb(240, 240, 240)
   background: -webkit-linear-gradient(left, #7441B2, #66389d)
   background: -o-linear-gradient(right, #7441B2, #66389d)
@@ -97,6 +102,86 @@ header
     font-weight: 300
     font-size: 1.5rem
     color: rgba(255, 255, 255, 0.7)
+
+.control
+  display: flex
+  flex-direction: column
+  margin-left: 2rem
+
+  h3
+    font-family: 'Lato', sans-serif
+    color: rgba(0, 0, 0, 0.87)
+    font-size: 0.8rem
+    line-height: 1rem
+    margin-bottom: .2rem
+
+.player-controls
+  display: flex
+  align-items: center
+
+#iterations
+  font-size: 1.4rem
+
+.main h4
+  text-transform: uppercase
+
+.control-menu
+  font-family: inherit
+  background-color: transparent
+  width: 100%
+  padding: 0.1rem
+  font-size: 1rem
+  color: rgba(0, 0, 0, 0.7)
+  border: none
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2)
+
+.control-value,
+.control-menu > option
+  font-weight: 300
+
+
+
+.circular-raised-button
+  display: block
+  width: 2.5rem
+  height: 2.5rem
+  border-radius: 50%
+  background: $dark-yellow
+  display: flex
+  justify-content: center
+  align-items: center
+  box-shadow: 0 .1rem .2rem 0 rgba(0, 0, 0, 0.26)
+
+  &:hover
+    cursor: pointer
+    box-shadow: 0 .2rem .3rem rgba(0,0,0,0.26)
+    transition: box-shadow 0.3s ease-in-out
+
+  i
+    position: relative
+    color: white
+
+.circular-icon-button
+  display: block
+  width: 2.5rem
+  height: 2.5rem
+  border-radius: 50%
+  background: transparent
+  display: flex
+  justify-content: center
+  align-items: center
+
+  &:hover
+    background: rgba(0,0,0,0.1)
+    cursor: pointer
+
+  i
+    position: relative
+    color: rgba(0, 0, 0, 0.7)
+
+.big
+  width: 3rem
+  height: 3rem
 
 #sankey
   float: left
