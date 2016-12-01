@@ -62,7 +62,6 @@
 	  // let addLayerButton = document.getElementById("");
 	  // let removeLayerButton = document.getElementById("");
 	  let playButton = document.getElementById("play-button");
-	  // let removeButton = document.getElementById("");
 	  let incrementButton = document.getElementById("increment-button");
 	  let resetButton = document.getElementById("reset-button");
 	
@@ -97,7 +96,8 @@
 	    .margins({ left: 40, right: 60, top: 10, bottom: 10 })
 	    .nodeTitle(function(d) { return d.data.title !== undefined ? d.data.title : d.id; })
 	    .linkTypeTitle(function(d) { return d.data.title; })
-	    .linkColor(function(d) { return d.data.color; });
+	    .linkColor(function(d) { return d.data.color; })
+	    .linkOpacity(0.7);
 	  let heatMap = new HeatMap(inputDim, sampleSize, outputDim, d3.select("#heatmap"));
 	  heatMap.generate();
 	
@@ -111,7 +111,7 @@
 	      // creates model
 	      model = new Model(neuralNet, dataset, dataset, activationF, learningRate);
 	      iterations = 0;
-	      iterationsEl.textContent = iterations+"";
+	      iterationsEl.textContent = iterations;
 	      render();
 	    }
 	
@@ -126,7 +126,7 @@
 	    const increment = () => {
 	      model.iterate();
 	      iterations ++;
-	      iterationsEl.textContent = iterations+"";
+	      iterationsEl.textContent = iterations;
 	      if (iterations % 10 === 0){
 	        render();
 	      }
@@ -390,11 +390,11 @@
 	    for (var i = 0; i < this.length; i++) {
 	      // adds bias neuron node
 	      if (i != this.length){
-	        nodes.push({"id":`${i+1}:0`,"width":20,"height":20})
+	        nodes.push({"id":`${i+1}:0`})
 	      }
 	      // adds one node for each neuron
 	      for (var j = 0; j < this.model[i]; j++) {
-	        nodes.push({"id":`${i+1}:${j+1}`,"direction":"r","height":20})
+	        nodes.push({"id":`${i+1}:${j+1}`})
 	      }
 	    }
 	    let currentMatrix, color, sum;
