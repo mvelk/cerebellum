@@ -173,6 +173,16 @@ h4 {
   width: 3rem;
   height: 3rem; }
 
+.show {
+  opacity:1;
+  visibility: visible;
+}
+
+.hide {
+  opacity:0;
+  visibility: hidden;
+}
+
 #data {
   width: 100%;
   flex: 2;
