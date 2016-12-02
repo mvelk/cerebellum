@@ -53,25 +53,42 @@
 	
 	
 	document.addEventListener("DOMContentLoaded", () => {
+	  // adjustable settings
+	  let sampleSize = 250;
+	  let maxLayers = 5;
+	  let maxNeurons = 6;
+	  let numLayers = 2;
+	  let neuralNet = [2,4,2,1];
+	  let inputDim = 300;
+	  let outputDim = 50;
 	
 	  let canvas = document.getElementById("data-sampler");
 	  let ctx = canvas.getContext("2d");
 	  let learningRateEl = document.getElementById("learning-rate");
 	  let iterationsEl = document.getElementById("iterations");
 	  let activationFEl = document.getElementById("activation-function");
-	  // let addLayerButton = document.getElementById("");
-	  // let removeLayerButton = document.getElementById("");
 	  let playButton = document.getElementById("play-button");
 	  let incrementButton = document.getElementById("increment-button");
 	  let resetButton = document.getElementById("reset-button");
 	  let dataGallery = document.getElementById("data-thumb-gallery");
-	  // define input size
-	  let inputDim = 300;
+	  let addLayerButton = document.getElementById("add-layer-button");
+	  let removeLayerButton = document.getElementById("remove-layer-button");
+	  let layerCount = document.getElementById("layer-count")
+	  // get elements for each layer
+	  let layerNeuron = {}
+	  for (var i = 1; i <= 5; i++) {
+	    layerNeuron[i] = {
+	      div: document.getElementById(`neuron-buttons-${i}`),
+	      addButton: document.getElementById(`add-neuron-button-${i}`),
+	      removeButton: document.getElementById(`remove-neuron-button-${i}`),
+	      counter: document.getElementById(`neuron-count-${i}`),
+	      neuronCount: parseInt(document.getElementById(`neuron-count-${i}`).innerHTML)
+	    }
+	  }
+	
+	  // define input image size
 	  canvas.width = inputDim;
 	  canvas.height = inputDim;
-	
-	  // define output size
-	  let outputDim = 50;
 	
 	  // set img source
 	  let image = document.createElement("img");
@@ -84,8 +101,6 @@
 	  // set model variables
 	  let dataset, model, data;
 	  let interval = undefined;
-	  let sampleSize = 250;
-	  let neuralNet = [2,4,2,1];
 	  let learningRate = learningRateEl.value;
 	  let iterations = 0;
 	  let activationF = activationFEl.value;
@@ -131,7 +146,6 @@
 	    }
 	  };
 	
-	  //controls
 	  const play = () => {
 	    interval = window.setInterval(increment, 10);
 	  };
@@ -140,16 +154,55 @@
 	    interval = window.clearInterval(interval);
 	  };
 	
+	  // creates array of neuron count
+	  const getNeuralNet = () => {
+	    let newModel = [2];
+	    let layer;
+	    for (var i = 1; i <= numLayers; i++) {
+	      newModel.push(layerNeuron[i].neuronCount);
+	    }
+	    newModel.push(1);
+	    return newModel;
+	  };
+	
+	  // sets classes for neuron buttons' divs
+	  const setLayerVisibility = () => {
+	    for (var i = 1; i <= numLayers; i++) {
+	      layerNeuron[i].div.className = "show";
+	    }
+	    for (var i = numLayers+1; i <= maxLayers; i++) {
+	      layerNeuron[i].div.className = "hide";
+	    }
+	  };
+	
+	  const setAddNeuron = (i) => {
+	    return () => {
+	      if (layerNeuron[i].neuronCount + 1 <= maxNeurons) {
+	        layerNeuron[i].neuronCount += 1;
+	        neuralNet = getNeuralNet();
+	        reset();
+	      }
+	    }
+	  }
+	
+	  const setRemoveNeuron = (i) => {
+	    return () => {
+	      if (layerNeuron[i].neuronCount - 1 >= 1) {
+	        layerNeuron[i].neuronCount -= 1;
+	        neuralNet = getNeuralNet();
+	        reset();
+	      }
+	    }
+	  }
+	
 	  //swaps out dataset image and resets network
 	  dataGallery.addEventListener("click", (e) => {
 	    let newImageUrl = e.target.getAttribute("data-image-url");
 	    image.src = newImageUrl;
-	    e.stopPropagation()
+	    e.stopPropagation();
 	  });
 	
-	
 	  playButton.addEventListener("click",(e)=>{
-	    console.log("clicked");
 	    e.preventDefault();
 	    let icon = document.getElementById('play-pause');
 	    if (icon.classList[1] == "fa-play") {
@@ -159,7 +212,6 @@
 	      icon.classList.remove('fa-pause');
 	      icon.classList.add('fa-play');
 	    }
-	    console.log(interval);
 	    if (interval === undefined) {
 	      play();
 	    } else {
@@ -178,6 +230,24 @@
 	    render();
 	  });
 	
+	  addLayerButton.addEventListener("click",(e)=>{
+	    if (numLayers+1 <= maxLayers) {
+	      numLayers += 1;
+	      neuralNet = getNeuralNet();
+	      setLayerVisibility();
+	      reset();
+	    }
+	  });
+	
+	  removeLayerButton.addEventListener("click",(e)=>{
+	    if (numLayers-1 >= 0) {
+	      numLayers -= 1;
+	      neuralNet = getNeuralNet();
+	      setLayerVisibility();
+	      reset();
+	    }
+	  });
+	
 	  learningRateEl.addEventListener("change",(e)=>{
 	    learningRate = e.currentTarget.value;
 	    reset();
@@ -193,8 +263,11 @@
 	    reset();
 	  });
 	
-	
-	
+	  // sets listeners for each add/remove neuron button
+	  for (var i = 1; i <= maxLayers; i++) {
+	    layerNeuron[i].addButton.addEventListener("click",setAddNeuron(i))
+	    layerNeuron[i].removeButton.addEventListener("click",setRemoveNeuron(i))
+	  }
 	});
 
 
@@ -405,17 +478,26 @@
 	  }
 	
 	  getSankeyData(){
+	    // nodes
 	    let nodes = [];
-	    for (var i = 0; i < this.length; i++) {
+	    // perceptrons
+	    nodes.push({"id":`0:0`, "title":"Bias"});
+	    nodes.push({"id":`0:1`, "title":"x1"});
+	    nodes.push({"id":`0:2`, "title":"x2"});
+	
+	    // other layers
+	    for (var i = 1; i < this.length; i++) {
 	      // adds bias neuron node
 	      if (i != this.length){
-	        nodes.push({"id":`${i+1}:0`});
+	        nodes.push({"id":`${i}:0`, "title":"Bias"});
 	      }
 	      // adds one node for each neuron
 	      for (var j = 0; j < this.model[i]; j++) {
-	        nodes.push({"id":`${i+1}:${j+1}`});
+	        nodes.push({"id":`${i}:${j+1}`});
 	      }
 	    }
+	
+	    // links
 	    let currentMatrix, color, sum;
 	    let links = [];
 	    for (var k = 0; k < this.weightMatrices.length; k++) {
@@ -425,8 +507,8 @@
 	        for (var j = 0; j < currentMatrix.m; j++) {
 	          color = currentMatrix.array[i][j] < 0 ? "#b39ddb" : "#ffff8d";
 	          links.push({
-	            "source": `${k+1}:${j}`,
-	            "target": `${k+2}:${i+1}`,
+	            "source": `${k}:${j}`,
+	            "target": `${k+1}:${i+1}`,
 	            "value": Math.abs(currentMatrix.array[i][j])/sum,
 	            "color": color
 	          });
