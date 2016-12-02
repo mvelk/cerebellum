@@ -58,10 +58,10 @@
         <h4>Data</h4>
         Select whatever dataset you feel like and let the hype ensue.
         <div id="data-thumb-gallery">
-            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578743/sample_data1_ueqzur.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578743/sample_data1_ueqzur.jpg"/>
-            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578748/sample_data2_e63tk6.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578748/sample_data2_e63tk6.jpg"/>
-            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578751/sample_data3_u2tlnj.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578751/sample_data3_u2tlnj.jpg"/>
-            <img data-image-url="http://res.cloudinary.com/dkpumd3gf/image/upload/v1480578753/sample_data4_g78zi4.jpg" class="data-thumb" src="http://res.cloudinary.com/dkpumd3gf/image/upload/c_scale,w_75/v1480578753/sample_data4_g78zi4.jpg"/>
+            <img data-image-url="images/sample_data1.jpg" class="data-thumb" src="images/sample_data1.jpg"/>
+            <img data-image-url="images/sample_data2.jpg" class="data-thumb" src="images/sample_data2.jpg"/>
+            <img data-image-url="images/sample_data3.jpg" class="data-thumb" src="images/sample_data3.jpg"/>
+            <img data-image-url="images/sample_data4.jpg" class="data-thumb" src="images/sample_data4.jpg"/>
         </div>
       </div>
       <div id="neurons">
@@ -77,7 +77,47 @@
     <canvas id="myCanvas"></canvas>
     <div id="heatmap" style="display:none"></div>
     <div id="real-heatmap"></div>
-    <div id="sankey"></div>
+    <div>
+      <div>
+        <span id="layer-count">2</span>
+        <span>LAYERS</span>
+        <a class="circular-icon-button" id="add-layer-button"><i class="fa fa-plus"></i></a>
+        <a class="circular-icon-button" id="remove-layer-button"><i class="fa fa-minus"></i></a>
+      </div>
+      <ul>
+        <div id="neuron-buttons-2" class="show">
+          <span id="neuron-count-2">2</span>
+          <span>NEURONS</span>
+          <a class="circular-icon-button" id="add-neuron-button-2"><i class="fa fa-plus"></i></a>
+          <a class="circular-icon-button" id="remove-neuron-button-2"><i class="fa fa-minus"></i></a>
+        </div>
+        <div id="neuron-buttons-3" class="hide">
+          <span id="neuron-count-3">2</span>
+          <span>NEURONS</span>
+          <a class="circular-icon-button" id="add-neuron-button-3"><i class="fa fa-plus"></i></a>
+          <a class="circular-icon-button" id="remove-neuron-button-3"><i class="fa fa-minus"></i></a>
+        </div>
+        <div id="neuron-buttons-4" class="hide">
+          <span id="neuron-count-4">2</span>
+          <span>NEURONS</span>
+          <a class="circular-icon-button" id="add-neuron-button-4"><i class="fa fa-plus"></i></a>
+          <a class="circular-icon-button" id="remove-neuron-button-4"><i class="fa fa-minus"></i></a>
+        </div>
+        <div id="neuron-buttons-5" class="hide">
+          <span id="neuron-count-5">2</span>
+          <span>NEURONS</span>
+          <a class="circular-icon-button" id="add-neuron-button-5"><i class="fa fa-plus"></i></a>
+          <a class="circular-icon-button" id="remove-neuron-button-5"><i class="fa fa-minus"></i></a>
+        </div>
+        <div id="neuron-buttons-6" class="hide">
+          <span id="neuron-count-6">2</span>
+          <span>NEURONS</span>
+          <a class="circular-icon-button" id="add-neuron-button-6"><i class="fa fa-plus"></i></a>
+          <a class="circular-icon-button" id="remove-neuron-button-6"><i class="fa fa-minus"></i></a>
+        </div>
+      </ul>
+      <div id="sankey"></div>
+    </div>
     <footer>
 
 
