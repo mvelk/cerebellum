@@ -18,7 +18,10 @@ Thus, a layer in terms of the previous layer can be given by: a<sup>n</sup> = g(
 
 The objective of a neural network is to come up with a series of such matrices that accurately predicts output y given input x, for the given training data set. The incremental process of fitting these matrices is done via gradient descent, simplified by back-propagation.
 
-The process of back-propagation is accomplished as follows. Find the deltas of the final layer: d<sup>n</sup> = a<sup>n</sup> - y, where y are the real output values of the training data. The deltas of the other layers are given as: d<sup>n</sup> = (A<sup>n</sup>)<sup>T</sup> * d<sup>n+1</sup> .* (a<sup>n</sup> .* (1 - a<sup>n</sup>)), where .* is a row wise multiplication and d<sup>n+1</sup> is the delta from the n+1 layer. These deltas are then multiplied with their corresponding layer to get the values their matrix has to be incremented by: A<sup>n</sup> := A<sup>n</sup> - (1/m) d<sup>i+1</sup> * (a<sup>i</sup>)<sup>T</sup>.
+The process of back-propagation is accomplished as follows:
+ - Find the deltas of the final layer: d<sup>n</sup> = a<sup>n</sup> - y, where y are the real output values of the training data.
+ - The deltas of the other layers are given as: d<sup>n</sup> = (A<sup>n</sup>)<sup>T</sup> * d<sup>n+1</sup> .* (a<sup>n</sup> .* (1 - a<sup>n</sup>)), where .* is a row wise multiplication and d<sup>n+1</sup> is the delta from the n+1 layer.
+ - These deltas are then multiplied with their corresponding layer to get the values their matrix has to be incremented by: A<sup>n</sup> := A<sup>n</sup> - (1/m) d<sup>i+1</sup> * (a<sup>i</sup>)<sup>T</sup>.
 
 If you are familiar with linear regression, you can picture the neural network as a linear regression model (y = a*x + b) with the vector of a = [a<sub>0</sub>, a<sub>1</sub>, a<sub>2</sub>...] coefficients replaced by a few matrices of coefficients.
 
@@ -70,17 +73,17 @@ data = model.getSankeyData();
 d3.select('#sankey').datum(data).call(diagram);
 
 ```
-The getSankeyData method pulls the matrices from our model object and creates an array of POJOs equal to:
+The getSankeyData method pulls the matrices from our model object and creates a POJO equal to:
 
 ``` js
 {
-  nodes:{
+  nodes:[
     {id:"a"},
     {id:"b"}
-  },
-  links:{
+  ],
+  links:[
     {source:"a", target:"b", value:1}
-  }
+  ]
 }
 
 ```
