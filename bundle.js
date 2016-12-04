@@ -122,6 +122,8 @@
 	    // creates sample data
 	    ctx.drawImage(image, 0, 0, inputDim, inputDim);
 	    dataset = getImageData(ctx, sampleSize, inputDim, inputDim);
+	    // update scatter plot
+	    heatMap.updateScatter(dataset, inputDim);
 	    // creates model
 	    model = new Model(neuralNet, dataset, dataset, activationF, learningRate);
 	    iterations = 0;
@@ -165,6 +167,16 @@
 	    return newModel;
 	  };
 	
+	  // update labels to reflect layer and neuron counts
+	
+	  const updateLayerCount = (count) => {
+	    document.getElementById('layer-count').innerHTML = count;
+	  };
+	
+	  const updateNeuronCount = (i, count) => {
+	    document.getElementById(`neuron-count-${i}`).innerHTML = count;
+	  };
+	
 	  // sets classes for neuron buttons' divs
 	  const setLayerVisibility = () => {
 	    for (var i = 1; i <= numLayers; i++) {
@@ -179,6 +191,7 @@
 	    return () => {
 	      if (layerNeuron[i].neuronCount + 1 <= maxNeurons) {
 	        layerNeuron[i].neuronCount += 1;
+	        updateNeuronCount(i, layerNeuron[i].neuronCount);
 	        neuralNet = getNeuralNet();
 	        reset();
 	      }
@@ -189,14 +202,17 @@
 	    return () => {
 	      if (layerNeuron[i].neuronCount - 1 >= 1) {
 	        layerNeuron[i].neuronCount -= 1;
+	        updateNeuronCount(i, layerNeuron[i].neuronCount);
 	        neuralNet = getNeuralNet();
 	        reset();
 	      }
 	    }
-	  }
+	  };
 	
 	  //swaps out dataset image and resets network
 	  dataGallery.addEventListener("click", (e) => {
+	    d3.selectAll(".data-thumb").classed("selected", false);
+	    e.target.classList.add("selected");
 	    let newImageUrl = e.target.getAttribute("data-image-url");
 	    image.src = newImageUrl;
 	    e.stopPropagation();
@@ -206,11 +222,16 @@
 	    e.preventDefault();
 	    let icon = document.getElementById('play-pause');
 	    if (icon.classList[1] == "fa-play") {
+	
 	      icon.classList.remove('fa-play');
 	      icon.classList.add('fa-pause');
+	      icon.parentNode.classList.remove('font-awesome-isnt-so-awesome');
+	      icon.parentNode.classList.add('font-awesome-isnt-so-awesome2');
 	    } else {
 	      icon.classList.remove('fa-pause');
 	      icon.classList.add('fa-play');
+	      icon.parentNode.classList.remove('font-awesome-isnt-so-awesome2');
+	      icon.parentNode.classList.add('font-awesome-isnt-so-awesome');
 	    }
 	    if (interval === undefined) {
 	      play();
@@ -233,6 +254,7 @@
 	  addLayerButton.addEventListener("click",(e)=>{
 	    if (numLayers+1 <= maxLayers) {
 	      numLayers += 1;
+	      updateLayerCount(numLayers);
 	      neuralNet = getNeuralNet();
 	      setLayerVisibility();
 	      reset();
@@ -242,6 +264,7 @@
 	  removeLayerButton.addEventListener("click",(e)=>{
 	    if (numLayers-1 >= 0) {
 	      numLayers -= 1;
+	      updateLayerCount(numLayers);
 	      neuralNet = getNeuralNet();
 	      setLayerVisibility();
 	      reset();
@@ -17201,19 +17224,36 @@
 	    this.image = this.context.createImageData(this.domain, this.domain);
 	
 	    let container = d3.select("#real-heatmap");
-	    this.scatterPlot = container.append("svg");
-	    this.scatterPlot.attr("width", this.width)
+	    this.scatterPlot = container.append("svg")
+	      .attr("width", this.width)
 	      .attr("height", this.height)
 	      .style("position", "absolute")
 	      .style("left", "0")
 	      .style("top", "0");
 	    window.scatterPlot = this.scatterPlot;
-	
-	
 	  }
 	
-	  updateScatter() {
-	
+	  updateScatter(dataset, inputDim) {
+	    this.scatterPlot.selectAll("circle").remove();
+	    let plotData = dataset.map((arr) => {
+	      return ([arr[0], arr[1] * inputDim/2 + inputDim/2, arr[2] * inputDim/2 + inputDim/2]);
+	    });
+	    this.scatterPlot.selectAll("circle")
+	      .data(plotData)
+	      .enter()
+	      .append("circle")
+	      .attr("r", 3)
+	      .attr("cx", (d) => (d[1]))
+	      .attr("cy", (d) => (d[2]))
+	      .style("fill", (d) => {
+	        if (d[0] == 0) {
+	          return "purple"
+	        } else {
+	          return "yellow"
+	        }
+	      })
+	      .style("stroke", "black")
+	      .style("stroke-opacity", "0.3");
 	  }
 	
 	  paintGradient(model) {
