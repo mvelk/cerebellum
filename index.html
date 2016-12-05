@@ -140,11 +140,45 @@
   </main>
     <canvas id="myCanvas"></canvas>
     <div id="heatmap" style="display:none"></div>
+    <div id="description">
+      <h2>What's going on?</h2>
+      <div id="this-is-going-on">
+        This is a simulation of a simple machine learning neural network being fit over time.
+        We first take a few sample points from the a picture that contains a pattern.
+        The objective of the neural network is to estimate the underlying pattern, or in this case, repaint the original picture,
+        using only the information from the sampled data points.
+        The neural network accomplishes this by 'learning' the training data points by finding a function that maps (x,y)
+        coordinates to colors as accurately as possible, then and reproduces the picture by mapping all the remaining
+        (x,y) coordinates to a color.
+      </div>
 
+      <h2>Neural Networks, Layers, Neurons</h2>
+      <div id="neural-network-description">
+        Neural networks are a type of machine learning algorithm that takes inspiration from the brain.
+        Neural networks are often used for classification problems and somewhat architecturally similar to linear regression.
+        <br/>
+        <br/>
+        The first layer of neurons is the input layer; this is where the (x,y) coordinates from the data samples come in.
+        These values are then linearly mapped via matrix multiplication ,so the number of neurons in each layer depends
+         on the dimensions of matrix associated with each layer.
+        To make the network more powerful, non-linearity is added by injecting the output into an activation function
+        such as the tanh or sigmoid function.
+        The result of these two operations (the matrix and the activation) is the next layer in the neural network.
+        This process is then repeated multiple times for each layer until it reaches the output layer, which is the estimation.
+        <br/>
+        <br/>
+        You may wonder, how do you come up with the values for the matrices? The matrices are first initialized to random values, which are
+        iteratively adjusted via gradient descent. Gradient descent basically adjusts a matrix element according to how much it contributed
+        to the error in approximating the output per given input, for every training data point.
+        <br/>
+        <br/>
+        How are the numbers of layers and neurons decided? That's for you to discover! Generally, having too few neurons would lead to a
+        badly fitted model (high bias), and having too many would lead to an over fitted model (high variance). 
+      </div>
+
+      </div>
+    </div>
     <footer>
-
-
-
 
 
     <footer>

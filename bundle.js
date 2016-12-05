@@ -126,6 +126,7 @@
 	    heatMap.updateScatter(dataset, inputDim);
 	    // creates model
 	    model = new Model(neuralNet, dataset, dataset, activationF, learningRate);
+	    window.model = model
 	    iterations = 0;
 	    iterationsEl.textContent = iterations;
 	    render();
