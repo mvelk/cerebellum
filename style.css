@@ -1,23 +1,250 @@
-/*
-Errno::ENOENT: No such file or directory @ rb_sysopen - style.sass
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  background: transparent;
+  text-rendering: optimizeLegibility; }
 
-Backtrace:
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:484:in `read'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:484:in `update_stylesheet'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `each'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:294:in `watch'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin.rb:109:in `method_missing'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:360:in `watch_or_update'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/sass_scss.rb:51:in `process_result'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/base.rb:52:in `parse'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/exec/base.rb:19:in `parse!'
-/Users/mvelker/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/sass-3.4.22/bin/sass:13:in `<top (required)>'
-/Users/mvelker/.rbenv/versions/2.3.1/bin/sass:22:in `load'
-/Users/mvelker/.rbenv/versions/2.3.1/bin/sass:22:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Errno::ENOENT: No such file or directory @ rb_sysopen - style.sass"; }
+body {
+  font-family: "Lato", sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1rem;
+  line-height: 1.5rem; }
+
+.padded {
+  padding: 3em 0; }
+
+main {
+  font-size: 0.8em;
+  line-height: 1.2em;
+  color: rgba(0, 0, 0, 0.5);
+  background: whitesmoke; }
+
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
+  html,
+  body {
+    font-size: 18px; } }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 300; }
+
+h1,
+h2 {
+  font-size: 2.625rem;
+  margin-bottom: 1.25rem;
+  line-height: 3.25rem; }
+
+h3 {
+  font-size: 1.625rem;
+  margin-bottom: 1rem;
+  line-height: 2.4375rem; }
+
+p {
+  margin-bottom: 1.333rem; }
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: auto; }
+
+.card {
+  margin-bottom: 2rem;
+  padding: 2rem 2rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); }
+
+.flexed {
+  display: flex; }
+
+nav {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); }
+
+header {
+  width: 100%;
+  color: white;
+  padding: 1.5rem 0;
+  background: #f0f0f0;
+  background: -webkit-linear-gradient(left, #311b92, #4527a0);
+  background: -o-linear-gradient(right, #311b92, #4527a0);
+  background: -moz-linear-gradient(right, #311b92, #4527a0);
+  background: linear-gradient(to right, #311b92, #4527a0); }
+  header h1 {
+    margin-bottom: 0rem;
+    letter-spacing: 0.2rem; }
+  header .subtitle {
+    font-family: "Lato", sans-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7); }
+
+.control {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem; }
+  .control h3 {
+    font-family: "Lato", sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 0.8rem;
+    line-height: 1rem;
+    margin-bottom: 0.2rem; }
+
+.player-controls {
+  display: flex;
+  align-items: center; }
+
+#iterations {
+  font-size: 1.4rem; }
+
+#data-thumb-gallery {
+  margin-top: 1rem; }
+
+.data-thumb {
+  width: 50px;
+  height: auto;
+  margin: 0 7px 7px 0;
+  opacity: 0.5;
+  border: 3px solid transparent;
+  border-radius: 5px; }
+
+.data-thumb:hover {
+  border: 3px solid rgba(0, 0, 0, 0.5); }
+
+.selected {
+  opacity: 1;
+  border: 3px solid rgba(0, 0, 0, 0.8); }
+
+h4 {
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 1rem; }
+
+#neurons h4 {
+  margin-bottom: 0px;
+  position: absolute;
+  left: 40px; }
+
+.control-menu {
+  font-family: inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: 0.1rem;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
+
+.control-value,
+.control-menu > option {
+  font-weight: 300; }
+
+.font-awesome-isnt-so-awesome {
+  position: absolute;
+  top: 14px;
+  left: 22px; }
+
+.font-awesome-isnt-so-awesome2 {
+  position: absolute;
+  top: 14px;
+  left: 20px; }
+
+.circular-raised-button {
+  position: relative;
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #ffff00;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.26); }
+  .circular-raised-button:hover {
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.26);
+    transition: box-shadow 0.3s ease-in-out; }
+  .circular-raised-button i {
+    color: rgba(0, 0, 0, 0.6); }
+
+.circular-icon-button {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .circular-icon-button i {
+    color: rgba(0, 0, 0, 0.6); }
+  .circular-icon-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    cursor: pointer; }
+
+.big {
+  width: 3rem;
+  height: 3rem; }
+
+.small {
+  margin-top: 0.2rem;
+  margin-bottom: 0.4rem;
+  width: 1.8rem;
+  height: 1.8rem; }
+
+.show-bg {
+  background: rgba(0, 0, 0, 0.025); }
+
+.add-remove-controls {
+  display: flex; }
+
+ul {
+  list-style: none;
+  max-width: 680px; }
+
+.net-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.layer-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.neuron-controls {
+  display: flex; }
+  .neuron-controls li {
+    margin-left: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+  .neuron-controls li:first-child {
+    margin-left: 0; }
+  .neuron-controls .hide {
+    display: none; }
+
+#data {
+  width: 100%;
+  min-width: 130px;
+  flex: 2;
+  margin-right: 1.5em; }
+
+#neurons {
+  position: relative;
+  width: 100%;
+  flex: 5;
+  margin-right: 1.5em; }
+
+#output {
+  width: 100%;
+  flex: 4; }
+
+/*# sourceMappingURL=style.css.map */
