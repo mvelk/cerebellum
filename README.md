@@ -1,7 +1,7 @@
 # Cerebellum
 
 Machine learning is a hot buzzword in the tech industry, but it is often misunderstood by the public. We aim to shed light on the techniques used to model simple data by visualizing the learning process of a simple neural network with
-[Cerebellum]().
+[Cerebellum](https://mvelk.github.io/cerebellum/).
 
 Development of the app will be inspired by the visualization provided by Tensorflow. <a href="http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.04370&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false">Tensorflow Playground</a>.
 
