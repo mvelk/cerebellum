@@ -82,8 +82,9 @@ h2
   line-height: 3.25rem
 
 h3
+  margin-top: 1.5rem
   font-size: 1.625rem
-  margin-bottom: 1rem
+  margin-bottom: .75rem
   line-height: 2.4375rem
 
 p
@@ -138,6 +139,7 @@ header
     color: rgba(0, 0, 0, 0.87)
     font-size: 0.8rem
     line-height: 1rem
+    margin-top: 0
     margin-bottom: .2rem
 
 .player-controls
@@ -247,8 +249,6 @@ h4
 .show-bg
   background: rgba(0,0,0,0.025)
 
-.add-remove-count
-
 .add-remove-controls
   display: flex
 
@@ -291,3 +291,46 @@ ul
 #output
   width: 100%
   flex: 4
+
+footer
+  margin-top: 2rem
+  padding: 2rem 0
+  font-size: .8rem
+  background: #f0f0f0
+  background: -webkit-linear-gradient(left, #311b92, #4527a0)
+  background: -o-linear-gradient(right, #311b92, #4527a0)
+  background: -moz-linear-gradient(right, #311b92, #4527a0)
+  background: linear-gradient(to right, #311b92, #4527a0)
+  color: rgba(255, 255, 255, 0.8)
+
+a:link
+  color: rgba(255, 255, 255, 1)
+  text-decoration: none
+
+a:visited
+  color: rgba(255, 255, 255, 1)
+
+a:hover
+  color: rgba(255, 255, 255, 1)
+
+.social a, svg
+  display: inline-block
+
+.social svg
+  vertical-align: middle
+  height: 20px
+  width: 20px
+  fill: rgba(255, 255, 255, 1)
+
+.social svg:hover
+  border-radius: 100%
+  fill: #311b92
+  background-color: white
+  transform: scale(1.25)
+  transition: background-color .5s, transform .5s ease-out
+
+.social-links
+  display: inline-block
+  position: relative
+  top: -2px
+  margin: 0 3px

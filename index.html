@@ -35,10 +35,10 @@
             <option value="0.0001">0.0001</option>
             <option value="0.001">0.001</option>
             <option value="0.003">0.003</option>
-            <option value="0.01">0.03</option>
+            <option value="0.01">0.01</option>
             <option value="0.03">0.03</option>
-            <option value="0.1" selected="true">0.1</option>
-            <option value="0.3">0.3</option>
+            <option value="0.1" >0.1</option>
+            <option value="0.3" selected>0.3</option>
             <option value="1">1</option>
             <option value="3">3</option>
           </select>
@@ -135,56 +135,79 @@
       </div>
       <div id="output">
         <h4>Output</h4>
+        <p>
+          Plotted points represent the sample data the model is fitting. Colors represent the model's classification of different regions of the chart.
+        </p>
         <div id="real-heatmap"></div>
       </div>
     </div>
   </main>
-    <canvas id="myCanvas"></canvas>
+    <canvas id="myCanvas" style="display: none"></canvas>
     <div id="heatmap" style="display:none"></div>
-    <div id="description">
-      <h2>What's going on?</h2>
+    <div id="description" class="content-wrapper">
+      <h3>What's going on?</h3>
       <div id="this-is-going-on">
-        This is a simulation of a simple machine learning neural network being fit over time.
-        We first take a few sample points from the a picture that contains a pattern.
-        The objective of the neural network is to estimate the underlying pattern, or in this case, repaint the original picture,
-        using only the information from the sampled data points.
-        The neural network accomplishes this by 'learning' the training data points by finding a function that maps (x,y)
-        coordinates to colors as accurately as possible, then and reproduces the picture by mapping all the remaining
-        (x,y) coordinates to a color.
+        <p>
+          This is a simulation of a simple machine learning neural network being fit over time.
+          We first take a few sample points from the a picture that contains a pattern.
+          The objective of the neural network is to estimate the underlying pattern, or in this case, repaint the original picture,
+          using only the information from the sampled data points.
+        </p>
+        <p>
+          The neural network accomplishes this by 'learning' the training data points by finding a function that maps (x, y)
+          coordinates to colors as accurately as possible, then and reproduces the picture by mapping all the remaining
+          (x, y) coordinates to a color.
+        </p>
       </div>
 
-      <h2>Neural Networks, Layers, Neurons</h2>
+      <h3>Neural Networks, Layers, Neurons</h3>
       <div id="neural-network-description">
-        Neural networks are a type of machine learning algorithm that takes inspiration from the brain.
-        Neural networks are often used for classification problems and somewhat architecturally similar to linear regression.
-        <br/>
-        <br/>
-        The first layer of neurons is the input layer; this is where the (x,y) coordinates from the data samples come in.
-        These values are then linearly mapped via matrix multiplication ,so the number of neurons in each layer depends
-         on the dimensions of matrix associated with each layer.
-        To make the network more powerful, non-linearity is added by injecting the output into an activation function
-        such as the tanh or sigmoid function.
-        The result of these two operations (the matrix and the activation) is the next layer in the neural network.
-        This process is then repeated multiple times for each layer until it reaches the output layer, which is the estimation.
-        <br/>
-        <br/>
-        You may wonder, how do you come up with the values for the matrices? The matrices are first initialized to random values, which are
-        iteratively adjusted via gradient descent. Gradient descent basically adjusts a matrix element according to how much it contributed
-        to the error in approximating the output per given input, for every training data point.
-        <br/>
-        <br/>
-        How are the numbers of layers and neurons decided? That's for you to discover! Generally, having too few neurons would lead to a
-        badly fitted model (high bias), and having too many would lead to an over fitted model (high variance). 
+        <p>
+          Neural networks are a type of machine learning algorithm that takes inspiration from the brain.
+          Neural networks are often used for classification problems and somewhat architecturally similar to linear regression.
+        </p>
+        <p>
+          The first layer of neurons is the input layer; this is where the (x, y) coordinates from the data samples come in.
+          These values are then linearly mapped via matrix multiplication ,so the number of neurons in each layer depends
+          on the dimensions of matrix associated with each layer.
+          To make the network more powerful, non-linearity is added by injecting the output into an activation function
+          such as the tanh or sigmoid function.
+          The result of these two operations (the matrix and the activation) is the next layer in the neural network.
+          This process is then repeated multiple times for each layer until it reaches the output layer, which is the estimation.
+        </p>
+        <p>
+          You may wonder, how do you come up with the values for the matrices? The matrices are first initialized to random values, which are
+          iteratively adjusted via gradient descent. Gradient descent basically adjusts a matrix element according to how much it contributed
+          to the error in approximating the output per given input, for every training data point.
+        </p>
+        <p>
+          How are the numbers of layers and neurons decided? That's for you to discover! Generally, having too few neurons would lead to a
+          badly fitted model (high bias), and having too many would lead to an over fitted model (high variance).
+        </p>
       </div>
-
       </div>
     </div>
     <footer>
+      <div class="content-wrapper">
 
-
-    <footer>
-      <div id="heatmap" style="display:none"></div>
-      <canvas id="data-sampler" style="display: none"></canvas>
+        Made by
+        <a href="mailto:pivanup@gmail.com?Subject=Hello">Pysith Vanuptikul</a>
+        &amp;
+        <a href="mailto:mattvelker@protonmail.com?Subject=Hello">Matt Velker</a>.
+        <br />
+        Connect with Pysith
+        <div class="social-links">
+          <a class="social" href="https://github.com/pv97" class="icon-13 github" title="GitHub"><svg viewBox="0 0 512 512"><path d="M256 70.7c-102.6 0-185.9 83.2-185.9 185.9 0 82.1 53.3 151.8 127.1 176.4 9.3 1.7 12.3-4 12.3-8.9V389.4c-51.7 11.3-62.5-21.9-62.5-21.9 -8.4-21.5-20.6-27.2-20.6-27.2 -16.9-11.5 1.3-11.3 1.3-11.3 18.7 1.3 28.5 19.2 28.5 19.2 16.6 28.4 43.5 20.2 54.1 15.4 1.7-12 6.5-20.2 11.8-24.9 -41.3-4.7-84.7-20.6-84.7-91.9 0-20.3 7.3-36.9 19.2-49.9 -1.9-4.7-8.3-23.6 1.8-49.2 0 0 15.6-5 51.1 19.1 14.8-4.1 30.7-6.2 46.5-6.3 15.8 0.1 31.7 2.1 46.6 6.3 35.5-24 51.1-19.1 51.1-19.1 10.1 25.6 3.8 44.5 1.8 49.2 11.9 13 19.1 29.6 19.1 49.9 0 71.4-43.5 87.1-84.9 91.7 6.7 5.8 12.8 17.1 12.8 34.4 0 24.9 0 44.9 0 51 0 4.9 3 10.7 12.4 8.9 73.8-24.6 127-94.3 127-176.4C441.9 153.9 358.6 70.7 256 70.7z"/></svg><!--[if lt IE 9]><em>GitHub</em><![endif]--></a>
+          <a class="social" href="https://www.linkedin.com/in/pivanup" class="icon-17 linkedin" title="LinkedIn"><svg viewBox="0 0 512 512"><path d="M186.4 142.4c0 19-15.3 34.5-34.2 34.5 -18.9 0-34.2-15.4-34.2-34.5 0-19 15.3-34.5 34.2-34.5C171.1 107.9 186.4 123.4 186.4 142.4zM181.4 201.3h-57.8V388.1h57.8V201.3zM273.8 201.3h-55.4V388.1h55.4c0 0 0-69.3 0-98 0-26.3 12.1-41.9 35.2-41.9 21.3 0 31.5 15 31.5 41.9 0 26.9 0 98 0 98h57.5c0 0 0-68.2 0-118.3 0-50-28.3-74.2-68-74.2 -39.6 0-56.3 30.9-56.3 30.9v-25.2H273.8z"/></svg><!--[if lt IE 9]><em>LinkedIn</em><![endif]--></a>
+        </div>
+        Connect with Matt
+        <div class="social-links">
+          <a class="social" href="https://github.com/mvelk" class="icon-13 github" title="GitHub"><svg viewBox="0 0 512 512"><path d="M256 70.7c-102.6 0-185.9 83.2-185.9 185.9 0 82.1 53.3 151.8 127.1 176.4 9.3 1.7 12.3-4 12.3-8.9V389.4c-51.7 11.3-62.5-21.9-62.5-21.9 -8.4-21.5-20.6-27.2-20.6-27.2 -16.9-11.5 1.3-11.3 1.3-11.3 18.7 1.3 28.5 19.2 28.5 19.2 16.6 28.4 43.5 20.2 54.1 15.4 1.7-12 6.5-20.2 11.8-24.9 -41.3-4.7-84.7-20.6-84.7-91.9 0-20.3 7.3-36.9 19.2-49.9 -1.9-4.7-8.3-23.6 1.8-49.2 0 0 15.6-5 51.1 19.1 14.8-4.1 30.7-6.2 46.5-6.3 15.8 0.1 31.7 2.1 46.6 6.3 35.5-24 51.1-19.1 51.1-19.1 10.1 25.6 3.8 44.5 1.8 49.2 11.9 13 19.1 29.6 19.1 49.9 0 71.4-43.5 87.1-84.9 91.7 6.7 5.8 12.8 17.1 12.8 34.4 0 24.9 0 44.9 0 51 0 4.9 3 10.7 12.4 8.9 73.8-24.6 127-94.3 127-176.4C441.9 153.9 358.6 70.7 256 70.7z"/></svg><!--[if lt IE 9]><em>GitHub</em><![endif]--></a>
+          <a class="social" href="https://www.linkedin.com/in/matt-velker-b0a2495" class="icon-17 linkedin" title="LinkedIn"><svg viewBox="0 0 512 512"><path d="M186.4 142.4c0 19-15.3 34.5-34.2 34.5 -18.9 0-34.2-15.4-34.2-34.5 0-19 15.3-34.5 34.2-34.5C171.1 107.9 186.4 123.4 186.4 142.4zM181.4 201.3h-57.8V388.1h57.8V201.3zM273.8 201.3h-55.4V388.1h55.4c0 0 0-69.3 0-98 0-26.3 12.1-41.9 35.2-41.9 21.3 0 31.5 15 31.5 41.9 0 26.9 0 98 0 98h57.5c0 0 0-68.2 0-118.3 0-50-28.3-74.2-68-74.2 -39.6 0-56.3 30.9-56.3 30.9v-25.2H273.8z"/></svg><!--[if lt IE 9]><em>LinkedIn</em><![endif]--></a>
+        </div>
+        <div id="heatmap" style="display:none"></div>
+        <canvas id="data-sampler" style="display: none"></canvas>
+      </div>
     </footer>
   </body>
 </html>
