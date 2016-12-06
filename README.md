@@ -1,7 +1,7 @@
 # Cerebellum
 
 Machine learning is a hot buzzword in the tech industry, but it is often misunderstood by the public. We aim to shed light on the techniques used to model simple data by visualizing the learning process of a simple neural network with
-[Cerebellum]().
+[Cerebellum](https://mvelk.github.io/cerebellum/).
 
 Development of the app will be inspired by the visualization provided by Tensorflow. <a href="http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.04370&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false">Tensorflow Playground</a>.
 
@@ -11,7 +11,7 @@ Development of the app will be inspired by the visualization provided by Tensorf
 Neural networks are a popular class of machine learning algorithms. A good way to visualize how neural networks works is as an attempt to approximate an output Y given a column vector X by it by multiplying several matrices. On each step of matrix multiplication, we call the output a "layer of neurons".
 
 The process of producing proceeding layers is given as the following:
- - Suppose we have an n dimensional vector for an input layer (also known as a layer of perceptrons); we first add a constant bias term to the column vector with a value of 1, turning it into an n+1 vector.
+ - Suppose we have an n dimensional vector for an input layer; we first add a constant bias term to the column vector with a value of 1, turning it into an n+1 vector.
  - Next we multiply it by an m x (n+1) dimensional matrix; so the next layer would then be a layer of m neurons.
  - We also add non-linearity by inputting each value of the m vector into an activation function.
 Thus, a layer in terms of the previous layer can be given by: a<sup>n</sup> = g(A<sup>n-1</sup> * (a<sup>n-1</sup> + bias)), where a<sup>n</sup> is the n<sup>th</sup> layer, A<sup>n</sup> is the matrix that maps a<sup>n-1</sup> to a<sup>n</sup>, and g is the activation function.
